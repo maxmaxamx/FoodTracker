@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Rubik';
+    /* Название, которое вы будете использовать в коде */
+    src: url('assets/fonts/Rubik-Medium.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+:root {
+    --primary-green: #2bdc8c;
+    --accent-red: #FF6B6B;
+    --danger-red: #EF5350;
+    --warning-red: #FF8A65;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rubik';
+}

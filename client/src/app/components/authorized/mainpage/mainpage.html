@@ -1,0 +1,92 @@
+<div class="container">
+    <app-auth-head></app-auth-head>
+
+    <select class="date-selector" [(ngModel)]="chosen">
+        <option value="" disabled selected>Выбор даты для заполнения</option>
+        @for (date of DatesToShow; track date.id) {
+        <option [value]="date.id">{{ date.dateS }}</option>
+        }
+    </select>
+
+    <div class="main-container">
+
+        <div class="meals-row">
+            <div class="meal-card">
+                <h3>Завтрак</h3>
+                <p class="placeholder-text">
+                    Тут будут отображаться<br>
+                    записанные продукты
+                </p>
+                <button class="add-food-btn">+ добавить еду</button>
+            </div>
+
+            <div class="meal-card">
+                <h3>Обед</h3>
+                <p class="placeholder-text">
+                    Тут будут отображаться<br>
+                    записанные продукты
+                </p>
+                <button class="add-food-btn">+ добавить еду</button>
+            </div>
+
+            <div class="meal-card">
+                <h3>Ужин</h3>
+                <p class="placeholder-text">
+                    Тут будут отображаться<br>
+                    записанные продукты
+                </p>
+                <button class="add-food-btn">+ добавить еду</button>
+            </div>
+        </div>
+
+        <div class="wavy-divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path class="wave-path"
+                    d="M0,60 C100,20 200,100 300,60 C400,20 500,100 600,60 C700,20 800,100 900,60 C1000,20 1100,100 1200,60" />
+                <path class="wave-path"
+                    d="M0,80 C100,50 200,110 300,75 C400,40 500,105 600,70 C700,40 800,105 900,70 C1000,40 1100,105 1200,70"
+                    opacity="0.5" />
+            </svg>
+        </div>
+
+        <div class="stats-section">
+            <p class="stats-label">Общая статистика по калориям, белкам, жирам, углеводам</p>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value">1 850</div>
+                    <div class="stat-label">ккал</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🥩</div>
+                    <div class="stat-value">120г</div>
+                    <div class="stat-label">белки</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🧈</div>
+                    <div class="stat-value">65г</div>
+                    <div class="stat-label">жиры</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🍞</div>
+                    <div class="stat-value">210г</div>
+                    <div class="stat-label">углеводы</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wavy-divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path class="wave-path"
+                    d="M0,60 C100,20 200,100 300,60 C400,20 500,100 600,60 C700,20 800,100 900,60 C1000,20 1100,100 1200,60" />
+                <path class="wave-path"
+                    d="M0,80 C100,50 200,110 300,75 C400,40 500,105 600,70 C700,40 800,105 900,70 C1000,40 1100,105 1200,70"
+                    opacity="0.5" />
+            </svg>
+        </div>
+
+    </div>
+
+
+</div>
