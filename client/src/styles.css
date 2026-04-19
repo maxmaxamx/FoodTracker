@@ -19,3 +19,7 @@
     box-sizing: border-box;
     font-family: 'Rubik';
 }
+
+html {
+    scroll-behavior: smooth;
+}

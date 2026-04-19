@@ -1,0 +1,49 @@
+<app-auth-head></app-auth-head>
+
+<div class="container">
+    <div class="content">
+
+        <div class="input-wrapper">
+            <span class="input-icon">🥗</span>
+            <input type="text" [(ngModel)]="query" class="form-input" placeholder="Введите название блюда/продукта"
+                (keyup.enter)="search()" />
+        </div>
+
+        <div class="table-container">
+            <table class="food-table">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                        <th>Калории</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (food of foods; track $index) {
+                    <tr (click)="loadFood(food.food_id)" style="cursor: pointer;">
+                        <td>{{ food.food_name }}</td>
+                        <td>{{ getServing(food)?.protein ?? '—' }}</td>
+                        <td>{{ getServing(food)?.fat ?? '—' }}</td>
+                        <td>{{ getServing(food)?.carbohydrate ?? '—' }}</td>
+                        <td>{{ getServing(food)?.calories ?? '—' }}</td>
+                    </tr>
+                    }
+
+                    @if (foods.length === 0 && query.trim()) {
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Ничего не найдено</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="buttons-container">
+            <button class="btn btn-add-photo">Добавить по фото</button>
+            <button class="btn btn-home">На главную</button>
+        </div>
+
+    </div>
+</div>
