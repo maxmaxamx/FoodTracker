@@ -5,6 +5,7 @@ import { Login } from './components/login/login';
 import { Signup } from './components/signup/signup';
 import { TwoFA } from './components/two-fa/two-fa';
 import { AddFood } from './components/authorized/add-food/add-food';
+import { AiChat } from './components/ai-chat-components/ai-chat/ai-chat';
 
 export const routes: Routes = [
     {path: '', component: WelcomePage},
@@ -12,5 +13,6 @@ export const routes: Routes = [
     {path: 'login', component: Login},
     {path: 'signup', component: Signup},
     {path: 'twofa', component: TwoFA},
-    {path: 'add', component: AddFood}
+    {path: 'add', component: AddFood},
+    {path: 'ai', component: AiChat}
 ];

@@ -1,0 +1,61 @@
+<div class="container">
+    <app-auth-head></app-auth-head>
+    <div class="content">
+        <div class="messages">
+            <!-- <div class="messBox">
+                <app-message></app-message>
+            </div>
+            <div class="messBox">
+                <app-message></app-message>
+            </div> -->
+
+            <h1>{{aiResponse}}</h1>
+        </div>
+        <div class="formField">
+            <div class="messageBox">
+                <div class="fileUploadWrapper">
+                    <label for="file" class="upload-trigger">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
+                            <circle stroke-width="20" stroke="var(--nonprimary)" fill="none" r="158.5" cy="168.5"
+                                cx="168.5"></circle>
+                            <path stroke-linecap="round" stroke-width="25" stroke="var(--nonprimary)"
+                                d="M167.759 79V259"></path>
+                            <path stroke-linecap="round" stroke-width="25" stroke="var(--nonprimary)"
+                                d="M79 167.138H259"></path>
+                        </svg>
+                        <span class="tooltip">Add an image</span>
+                    </label>
+
+                    @if (selectedFile) {
+                    <div class="file-preview-badge">
+                        @if (isImage) {
+                        <img [src]="previewUrl" class="preview-thumb" alt="photo" />
+                        } @else {
+                        <span class="file-icon">📄</span>
+                        }
+                        <span class="file-name">{{ selectedFile.name }}</span>
+
+                        <button type="button" class="remove-file-btn" (click)="removeFile()" aria-label="Remove file">
+                            ✕
+                        </button>
+                    </div>
+                    }
+                    <input type="file" id="file" name="photo" (change)="onFileSelected($event)" multiple="false"
+                        hidden />
+                </div>
+
+                <button id="sendButton" (click)="sendFile()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 664 663">
+                        <path fill="none"
+                            d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888">
+                        </path>
+                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="33.67"
+                            stroke="var(--nonprimary)"
+                            d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

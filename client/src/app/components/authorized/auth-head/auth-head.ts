@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from "@angular/router";
+import { Theme } from '../../../services/theme';
 
 @Component({
   selector: 'app-auth-head',
@@ -8,5 +9,5 @@ import { RouterLink } from "@angular/router";
   styleUrl: './auth-head.css',
 })
 export class AuthHead {
-
+  protected themeChanger = inject(Theme);
 }

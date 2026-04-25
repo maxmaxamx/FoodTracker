@@ -1,0 +1,125 @@
+
+.message-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 1vw;
+    padding: 1vw 0;
+    animation: messageSlide 0.25s ease;
+}
+
+.message-container.user {
+    flex-direction: row-reverse;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(0.5vw);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-avatar {
+    flex-shrink: 0;
+    width: 3.5vw;
+    height: 3.5vw;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6vw;
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-container.user .message-avatar {
+    background: var(--primary-green);
+}
+
+.message-bubble {
+    max-width: 75%;
+    padding: 1.2vw 1.8vw;
+    border-radius: 1.5vw;
+    background: var(--primary);
+    border: 1px solid var(--border-surface, #e0e0e0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    position: relative;
+}
+
+.message-container.user .message-bubble {
+    background: linear-gradient(135deg, var(--primary-green, #2bdc8c) 0%, #24a86a 100%);
+    color: white;
+    border: none;
+    border-radius: 1.5vw 0.4vw 1.5vw 1.5vw;
+    box-shadow: 0 6px 20px rgba(43, 220, 140, 0.25);
+}
+
+.message-container.ai .message-bubble {
+    border-radius: 0.4vw 1.5vw 1.5vw 1.5vw;
+}
+
+/* === Текст сообщения === */
+.message-text {
+    font-size: 1.15vw;
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    color: var(--nonprimary);
+}
+
+
+/* === Мета-информация (время) === */
+.message-meta {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.6vw;
+    font-size: 0.85vw;
+    opacity: 0.6;
+}
+
+.message-container.user .message-meta {
+    opacity: 0.85;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+@media (max-width: 768px) {
+    .message-container {
+        gap: 2.5vw;
+        padding: 2.5vw 0;
+    }
+
+    .message-avatar {
+        width: 9vw;
+        height: 9vw;
+        font-size: 4vw;
+    }
+
+    .message-bubble {
+        max-width: 85%;
+        padding: 3vw 4vw;
+        border-radius: 4vw;
+    }
+
+    .message-container.user .message-bubble {
+        border-radius: 4vw 1vw 4vw 4vw;
+    }
+
+    .message-container.ai .message-bubble {
+        border-radius: 1vw 4vw 4vw 4vw;
+    }
+
+    .message-text {
+        font-size: 3.8vw;
+    }
+
+    .message-meta {
+        font-size: 3vw;
+        margin-top: 1.5vw;
+    }
+}

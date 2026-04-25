@@ -20,7 +20,7 @@
     width: 1400px;
     max-width: 90vw;
     min-height: 40vw;
-    background-color: white;
+    background-color: var(--primary);
     border-radius: 2vw;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
     padding: 4vw 5vw;
@@ -33,7 +33,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: var(--primary);
     color: #333;
     max-width: 480px;
     margin: 0 auto;
@@ -122,8 +122,8 @@ body {
     padding: 12px 6px;
     font-size: 14px;
     text-align: center;
-    background-color: #ffeaea;
-    border-bottom: 1px solid #f0d0d0;
+    background-color: #d5d5d5;
+    border-bottom: 1px solid #d5d5d5;
 }
 
 .food-table tbody td:first-child {
@@ -203,10 +203,9 @@ body {
 .input-wrapper {
     display: flex;
     align-items: center;
-    background: #f7f9fc;
-    border: 0.15vw solid #e0e6ed;
+    background: var(--primary-input);
+    border: 0.15vw solid var(--primary-input-border);
     border-radius: 1vw;
-    padding: 0 1.2vw;
     height: 4vw;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
@@ -234,7 +233,7 @@ body {
 }
 
 .form-input::placeholder {
-    color: #aaa;
+    color: #1e1e1e;
 }
 
 .toggle-password {
@@ -249,4 +248,179 @@ body {
 
 .toggle-password:hover {
     opacity: 1;
+}
+
+/* ЗАГРУЗКА */
+.loader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --color: hsl(0, 0%, 87%);
+    --animation: 2s ease-in-out infinite;
+}
+
+.loader .circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: solid 2px var(--color);
+    border-radius: 50%;
+    margin: 0 10px;
+    background-color: transparent;
+    animation: circle-keys var(--animation);
+}
+
+.loader .circle .dot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--color);
+    animation: dot-keys var(--animation);
+}
+
+.loader .circle .outline {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    animation: outline-keys var(--animation);
+}
+
+.circle:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.circle:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.circle:nth-child(4) {
+    animation-delay: 0.9s;
+}
+
+.circle:nth-child(5) {
+    animation-delay: 1.2s;
+}
+
+.circle:nth-child(2) .dot {
+    animation-delay: 0.3s;
+}
+
+.circle:nth-child(3) .dot {
+    animation-delay: 0.6s;
+}
+
+.circle:nth-child(4) .dot {
+    animation-delay: 0.9s;
+}
+
+.circle:nth-child(5) .dot {
+    animation-delay: 1.2s;
+}
+
+.circle:nth-child(1) .outline {
+    animation-delay: 0.9s;
+}
+
+.circle:nth-child(2) .outline {
+    animation-delay: 1.2s;
+}
+
+.circle:nth-child(3) .outline {
+    animation-delay: 1.5s;
+}
+
+.circle:nth-child(4) .outline {
+    animation-delay: 1.8s;
+}
+
+.circle:nth-child(5) .outline {
+    animation-delay: 2.1s;
+}
+
+@keyframes circle-keys {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes dot-keys {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes outline-keys {
+    0% {
+        transform: scale(0);
+        outline: solid 20px var(--color);
+        outline-offset: 0;
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        outline: solid 0 transparent;
+        outline-offset: 20px;
+        opacity: 0;
+    }
+}
+
+
+.cta {
+    height: 4vw;
+    background: linear-gradient(135deg, var(--primary-green, #2bdc8c) 0%, #24a86a 100%);
+    color: white;
+    border: none;
+    border-radius: 1vw;
+    font-size: 1.4vw;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8vw;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 25px rgba(43, 220, 140, 0.3);
+    padding-right: 2vw;
+    padding-left: 2vw;
+}
+
+.cta:hover {
+    transform: translateY(-0.2vw);
+    box-shadow: 0 12px 35px rgba(43, 220, 140, 0.4);
+}
+
+.cta:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.cta span {
+    color: white;
 }

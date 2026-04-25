@@ -19,7 +19,7 @@
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
                         <input [type]="passType" id="password" class="form-input" placeholder="Введите пароль" required />
-                        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()" routerLink="/twofa">
                             <span class="eye-icon" id="eyeIcon">{{passIcon}}</span>
                         </button>
                     </div>

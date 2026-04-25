@@ -9,13 +9,13 @@ export class FatsecretService {
   private http = inject(HttpClient);
   private api = '/api/fatsecret';
 
-  searchFoods(query: string) {
+  searchFoods(query: string) {  
     return this.http
       .get<any>(`${this.api}/search`, {
         params: { q: query }
       })
       .pipe(
-        map(res => {
+        map(res => {      
           const foods = res?.foods?.food;
           if (!foods) return [];
           return Array.isArray(foods) ? foods : [foods];
@@ -23,7 +23,5 @@ export class FatsecretService {
       );
   }
 
-  getFoodById(id: string) {
-    return this.http.get<any>(`${this.api}/food/${id}`);
-  }
+
 }  

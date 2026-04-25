@@ -3,6 +3,7 @@ import { Footer } from "../../footer/footer";
 import { AuthHead } from "../auth-head/auth-head";
 import { subDays } from '../../../utils/helpers';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from "@angular/router";
 
 interface dateToChoose {
   id: number,
@@ -26,7 +27,7 @@ interface DishList{
 
 @Component({
   selector: 'app-mainpage',
-  imports: [AuthHead, FormsModule],
+  imports: [AuthHead, FormsModule, RouterLink],
   templateUrl: './mainpage.html',
   styleUrl: './mainpage.css',
 })
