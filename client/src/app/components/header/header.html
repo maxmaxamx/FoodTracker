@@ -16,7 +16,7 @@
 
             <div>
                 <label class="switch">
-                    <input id="input" type="checkbox" checked="darkTheme" (click)="themeChanger.toggleTheme()" />
+                    <input id="input" type="checkbox" [checked]="themeChanger.isDark" (click)="themeChanger.toggleTheme()" />
                     <div class="slider round">
                         <div class="sun-moon">
                             <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 100 100">

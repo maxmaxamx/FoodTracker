@@ -1,10 +1,18 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 let cachedToken = null;
 let tokenExpiresAt = 0;
 
 export async function getFatSecretToken() {
-    // Если токен ещё жив — возвращаем его
     if (cachedToken && Date.now() < tokenExpiresAt - 60000) {
         return cachedToken;
     }

@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import smartRouter from "./routes/smartRouter.js"
+import { pool } from "./database.js";
 
 export const app = express();
 
@@ -10,7 +11,16 @@ app.use(express.json());
 console.log('FATSECRET_CLIENT_ID:', process.env.FATSECRET_CLIENT_ID ? '✅' : '❌');
 console.log('FATSECRET_CLIENT_SECRET:', process.env.FATSECRET_CLIENT_SECRET ? '✅' : '❌');
 
-app.use("/api",smartRouter);
+app.use("/api", smartRouter);
+
+pool.query('select now()', (err, res) => {
+    if (err) {
+        console.error('error with connection', err.stack);
+    } else {
+        console.log('succesful connection to db', res.rows);
+    }
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -5,6 +5,7 @@ import { Injectable, inject, signal, OnInit } from '@angular/core';
 })
 export class Theme {
   currentTheme = signal<'light' | 'dark'>('dark');
+  isDark: boolean = false;
 
   constructor(){
     this.initTheme();
@@ -30,5 +31,10 @@ export class Theme {
     this.currentTheme.set(theme);
     localStorage.setItem('data-theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
+    if(theme === 'dark'){
+      this.isDark = true;
+    } else {
+      this.isDark = false;
+    }
   }
 }

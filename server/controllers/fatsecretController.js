@@ -10,10 +10,11 @@ export async function searchFood(req,res) {
 
         const token = await getFatSecretToken();
 
-        const response = await axios.get(
+        const response = await axios.post(
             'https://platform.fatsecret.com/rest/server.api',
+            null,
             {
-                params: {
+                params: {   
                     method: 'foods.search',
                     search_expression: q,
                     format: 'json',
