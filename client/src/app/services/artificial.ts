@@ -14,4 +14,5 @@ export class Artificial {
 
     return this.http.post<string>(`${this.api}/recognize`, formData)
   }
+  
 }

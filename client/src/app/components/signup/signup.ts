@@ -15,6 +15,7 @@ export class Signup {
 
   protected log: User = {
     email: "",
+    username: "",
     password: ""
   }
 
