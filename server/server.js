@@ -3,11 +3,21 @@ import cors from 'cors';
 import smartRouter from "./routes/smartRouter.js"
 import { pool } from "./database.js";
 import { sendEmail, sendMAIL } from './helpers/mailSETUP.js';
+import session from 'express-session';
 
 export const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(session({
+    secret: 'mySuperSecretPhrase21323411341335566734recdgdf',
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+        secure: false,
+        httpOnly: true
+    }
+}))
 
 console.log('FATSECRET_CLIENT_ID:', process.env.FATSECRET_CLIENT_ID ? '✅' : '❌');
 console.log('FATSECRET_CLIENT_SECRET:', process.env.FATSECRET_CLIENT_SECRET ? '✅' : '❌');

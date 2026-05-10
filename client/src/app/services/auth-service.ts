@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { EventEmitter, inject, Injectable } from '@angular/core';
 import { catchError } from 'rxjs';
 import { User } from '../utils/identifiers';
@@ -19,4 +19,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(this.loginApi, info);
   }
 
+  sendCode(code: string) {
+    const params = new HttpParams().set('code', code);
+
+    return this.http.get<number>('api/code', { params })
+  }
 }

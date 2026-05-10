@@ -9,14 +9,23 @@
             <form class="login-form" onsubmit="return false;">
                 <div class="form-group">
                     <div class="input-wrapper">
-                        <span class="input-icon">📧</span>
-                        <input type="email" id="email" class="form-input" placeholder="Например: 113244" required />
+                        <span class="input-icon">⌨️</span>
+                        <input [(ngModel)]="code" type="text" id="email" class="form-input"
+                            placeholder="Например: 113244" required />
                     </div>
                 </div>
 
                 <button type="submit" class="login-btn" routerLink="/authorized">
                     <span class="btn-text">Подтвердить</span>
                 </button>
+
+                @if(errorMessage){
+                <div class="error-box">
+                    <div class="alert">
+                        <strong>Error:</strong> {{errorMessage}}
+                    </div>
+                </div>
+                }
             </form>
         </div>
 

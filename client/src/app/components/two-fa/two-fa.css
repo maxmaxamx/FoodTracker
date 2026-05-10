@@ -204,7 +204,7 @@
     transform: translateY(0) scale(0.98);
 }
 
-.login-btn span{
+.login-btn span {
     color: white;
 }
 
@@ -343,6 +343,26 @@
     font-size: 1.4vw;
     color: #333;
     line-height: 1.4;
+}
+
+
+.error-text {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border-left: 4px solid #dc3545;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {

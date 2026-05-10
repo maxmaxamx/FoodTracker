@@ -13,4 +13,6 @@ router.post('/login', authController.loginUser);
 
 router.post('/register', authController.addUser);
 
+router.get('/check', authController.checkCode);
+
 export default router;

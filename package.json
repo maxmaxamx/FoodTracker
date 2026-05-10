@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "express-session": "^1.19.0",
     "formidable": "^3.5.4",
     "nodemailer": "^8.0.7",
     "pg": "^8.20.0",
