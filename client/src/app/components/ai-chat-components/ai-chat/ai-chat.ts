@@ -5,7 +5,7 @@ import { Message } from "../message/message";
 
 @Component({
   selector: 'app-ai-chat',
-  imports: [AuthHead, Message],
+  imports: [AuthHead],
   templateUrl: './ai-chat.html',
   styleUrl: './ai-chat.css',
 })

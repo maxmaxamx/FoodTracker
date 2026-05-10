@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import smartRouter from "./routes/smartRouter.js"
 import { pool } from "./database.js";
+import { sendEmail, sendMAIL } from './helpers/mailSETUP.js';
 
 export const app = express();
 
@@ -24,5 +25,14 @@ pool.query('select now()', (err, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
+
+    try {
+        for (let i = 0; i < 10; i++) {
+            sendEmail("ogrenich.kn@gmail.com", "здрайвствуйте", "доствидания");
+        }
+        console.log('Тестовое письмо отправлено');
+    } catch (err) {
+        console.error(' Ошибка при тесте почты:', err);
+    }
     console.log(` Server started on http://localhost:${port}`);
 });

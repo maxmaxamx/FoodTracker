@@ -15,11 +15,21 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label" for="email">Имя</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input type="email" id="email" class="form-input" placeholder="example@mail.com" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="form-label" for="password">Пароль</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
-                        <input [type]="passType" id="password" class="form-input" placeholder="Введите пароль" required />
-                        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()" routerLink="/twofa">
+                        <input [type]="passType" id="password" class="form-input" placeholder="Введите пароль"
+                            required />
+                        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()"
+                            routerLink="/twofa">
                             <span class="eye-icon" id="eyeIcon">{{passIcon}}</span>
                         </button>
                     </div>

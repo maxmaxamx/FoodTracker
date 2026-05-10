@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { pool } from '../database';
+import { pool } from '../database.js';
 import PG from 'pg';
 import bcrypt from 'bcrypt';
-import { use } from 'react';
 import nodemailer from 'nodemailer';
 
 export async function addUser(req, res) {

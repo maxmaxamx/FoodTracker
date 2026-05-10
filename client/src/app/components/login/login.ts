@@ -40,12 +40,10 @@ export class Login {
   loginClick(): void {
     this.Authorize.login(this.log).subscribe({
       next: (response) => {
-        // ✅ Статус 200-299: успешный вход
         console.log('Успех:', response);
         this.router.navigate(['/2fa']);
       },
       error: (err) => {
-        // ❌ Статус 4xx или 5xx: ошибка
         console.error('Ошибка сервера:', err);
 
         const serverMessage = err.error?.message || 'Неизвестная ошибка';
