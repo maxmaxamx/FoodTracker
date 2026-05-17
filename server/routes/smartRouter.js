@@ -11,8 +11,12 @@ router.post('/foodBot/recognize', aiController.recognizeFood)
 
 router.post('/login', authController.loginUser);
 
+router.get('/logout', authController.logoutUser)
+
 router.post('/register', authController.addUser);
 
 router.get('/check', authController.checkCode);
+
+router.get('/isMe', authController.checkAuth)
 
 export default router;

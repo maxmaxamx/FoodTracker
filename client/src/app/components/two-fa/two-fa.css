@@ -1,6 +1,7 @@
 .hero {
     background-color: var(--primary-green, #2bdc8c);
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -10,8 +11,8 @@
 }
 
 .hero .content {
-    width: 1400px;
-    max-width: 90vw;
+    width: min(100%, 1400px);
+    max-width: 100%;
     min-height: 40vw;
     background-color: var(--primary);
     border-radius: 2vw;
@@ -473,5 +474,113 @@
 
     .wavy-divider {
         height: 8vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding-top: 14vw;
+        padding-bottom: 10vw;
+    }
+
+    .hero .content {
+        padding: 6vw 3vw;
+    }
+
+    #intro .intro-text {
+        font-size: 4vw;
+        max-width: 95vw;
+    }
+
+    .section-title {
+        font-size: 5vw;
+    }
+
+    .form-label {
+        font-size: 3vw;
+    }
+
+    .input-wrapper {
+        height: 11vw;
+        border-radius: 2.5vw;
+    }
+
+    .input-icon {
+        font-size: 4vw;
+    }
+
+    .form-input {
+        font-size: 3.5vw;
+    }
+
+    .toggle-password {
+        font-size: 3.5vw;
+    }
+
+    .form-options {
+        flex-direction: column;
+        gap: 2.5vw;
+        align-items: flex-start;
+    }
+
+    .remember-me {
+        font-size: 3vw;
+    }
+
+    .remember-me input[type="checkbox"] {
+        width: 3.5vw;
+        height: 3.5vw;
+    }
+
+    .forgot-link {
+        font-size: 3vw;
+    }
+
+    .login-btn {
+        height: 10vw;
+        font-size: 3.5vw;
+        border-radius: 2.5vw;
+    }
+
+    .btn-arrow {
+        font-size: 4vw;
+    }
+
+    .divider-line span {
+        font-size: 3vw;
+    }
+
+    .social-login {
+        flex-direction: column;
+        gap: 1.5vw;
+    }
+
+    .social-btn {
+        height: 10vw;
+        font-size: 3.2vw;
+        border-radius: 2.5vw;
+    }
+
+    .signup-link {
+        font-size: 3.3vw;
+    }
+
+    .pro-item {
+        padding: 4vw 5vw;
+        gap: 2.5vw;
+    }
+
+    .pro-icon {
+        width: 8vw;
+        height: 8vw;
+        font-size: 4vw;
+    }
+
+    .pro-text {
+        font-size: 3.5vw;
+    }
+
+    .wavy-divider {
+        height: 10vw;
     }
 }

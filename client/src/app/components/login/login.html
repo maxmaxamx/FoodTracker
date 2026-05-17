@@ -5,12 +5,13 @@
         <div class="section-block login-section" id="login">
             <h2 class="section-title login-title">Вход в аккаунт</h2>
 
-            <form class="login-form" onsubmit="return false;">
+            <form class="login-form" (ngSubmit)="loginClick()">
                 <div class="form-group">
                     <label class="form-label" for="email">Электронная почта</label>
                     <div class="input-wrapper">
                         <span class="input-icon">📧</span>
-                        <input type="email" id="email" class="form-input" placeholder="example@mail.com" required />
+                        <input type="email" name="name" id="email" class="form-input" placeholder="example@mail.com" required
+                            [(ngModel)]="log.email" />
                     </div>
                 </div>
 
@@ -18,8 +19,8 @@
                     <label class="form-label" for="password">Пароль</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
-                        <input [type]="passType" id="password" class="form-input" placeholder="Введите пароль"
-                            required />
+                        <input [type]="passType" name="password" class="form-input" placeholder="Введите пароль" required
+                            [(ngModel)]="log.password" />
                         <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
                             <span class="eye-icon" id="eyeIcon">{{passIcon}}</span>
                         </button>
@@ -34,7 +35,7 @@
                     <a href="#" class="forgot-link">Забыли пароль?</a>
                 </div> -->
 
-                <button type="submit" class="login-btn" (click)="loginClick()">
+                <button type="submit" class="login-btn">
                     <span class="btn-text">Войти</span>
                     <span class="btn-arrow">→</span>
                 </button>

@@ -6,7 +6,8 @@
 
 .container {
     background-color: var(--primary-green, #2bdc8c);
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -17,8 +18,8 @@
 }
 
 .content {
-    width: 1400px;
-    max-width: 90vw;
+    width: min(100%, 1400px);
+    max-width: 100%;
     min-height: 40vw;
     background-color: var(--primary);
     border-radius: 2vw;
@@ -29,15 +30,6 @@
     gap: 4vw;
     justify-content: center;
     align-items: center; */
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    background-color: var(--primary);
-    color: #333;
-    max-width: 480px;
-    margin: 0 auto;
-    min-height: 100vh;
 }
 
 /* === HEADER === */
@@ -424,3 +416,91 @@ body {
 .cta span {
     color: white;
 }
+
+@media (max-width: 768px) {
+    .container {
+        padding-top: 10vw;
+        padding-bottom: 6vw;
+    }
+
+    .content {
+        padding: 6vw 4vw;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .search-container,
+    .table-container,
+    .buttons-container {
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+    }
+
+    .food-table thead th,
+    .food-table tbody td {
+        font-size: 0.9rem;
+        padding: 10px 8px;
+    }
+
+    .btn {
+        font-size: 0.95rem;
+        padding: 12px 14px;
+    }
+
+    .header,
+    .search-bar {
+        width: 100%;
+    }
+
+    .input-wrapper {
+        height: 9vw;
+        border-radius: 2vw;
+    }
+
+    .form-input {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 6vw 3vw;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .search-container,
+    .table-container,
+    .buttons-container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .food-table thead th,
+    .food-table tbody td {
+        font-size: 0.85rem;
+        padding: 10px 6px;
+    }
+
+    .btn {
+        font-size: 0.95rem;
+        padding: 12px 12px;
+    }
+
+    .buttons-container {
+        gap: 0.8rem;
+    }
+
+    .messageBox {
+        min-width: 0;
+    }
+
+    .input-wrapper {
+        height: 11vw;
+    }
+
+    .form-input {
+        font-size: 3.5vw;
+    }
+}
+

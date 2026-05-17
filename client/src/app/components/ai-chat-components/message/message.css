@@ -123,3 +123,39 @@
         margin-top: 1.5vw;
     }
 }
+
+@media (max-width: 480px) {
+    .message-container {
+        gap: 3vw;
+        padding: 3vw 0;
+    }
+
+    .message-avatar {
+        width: 11vw;
+        height: 11vw;
+        font-size: 5vw;
+    }
+
+    .message-bubble {
+        max-width: 100%;
+        padding: 4vw 5vw;
+        border-radius: 5vw;
+    }
+
+    .message-container.user .message-bubble {
+        border-radius: 5vw 1.2vw 5vw 5vw;
+    }
+
+    .message-container.ai .message-bubble {
+        border-radius: 1.2vw 5vw 5vw 5vw;
+    }
+
+    .message-text {
+        font-size: 4.5vw;
+    }
+
+    .message-meta {
+        font-size: 3.5vw;
+        margin-top: 2vw;
+    }
+}

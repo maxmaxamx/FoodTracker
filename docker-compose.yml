@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -8,17 +6,52 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: qq2211ww
-      POSTGRES_DB: foodtracker  
+      POSTGRES_DB: foodtracker
     ports:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d foodtracker"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d foodtracker" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: foodtracker-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432 
+      DB_NAME: foodtracker
+      DB_USER: postgres
+      DB_PASSWORD: qq2211ww
+
+      PORT: 3000
+      NODE_ENV: production
+      FATSECRET_CLIENT_ID: 8ead3402fb5944529457b167844601cd
+      FATSECRET_CLIENT_SECRET: e99018aa0b6d44bf90090dafd8cb30c9
+      GMAIL_USER: foodtracker932@gmail.com
+      GMAIL_APP_PASSWORD: lyzu cmfh wmpp iesd
+    depends_on:
+      postgres:
+        condition: service_healthy # ждём, пока БД не станет готова
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: foodtracker-web
+    restart: unless-stopped
+    ports:
+      - "4200:80" # 80:80 для прода, "4200:80" для разработки
+    depends_on:
+      - backend
 
 volumes:
-  pgdata:
+  pgdata: # именованный том — данные БД сохранятся при пересборке

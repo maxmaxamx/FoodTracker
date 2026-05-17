@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, Router } from "@angular/router";
 import { User } from '../../utils/identifiers';
 import { Header } from "../header/header";
@@ -16,6 +16,7 @@ export class Signup {
   protected passIcon: string = "👁"
   protected errorMessage: string = '';
   private Authorize: AuthService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   protected log: User = {
     email: "",
@@ -35,26 +36,22 @@ export class Signup {
     }
   }
 
-  loginClick(): void {
-    this.Authorize.login(this.log).subscribe({
+  signupClick(): void {
+    this.Authorize.signup(this.log).subscribe({
       next: (response) => {
         console.log('Успех:', response);
-        this.router.navigate(['/2fa']);
+        this.router.navigate(['/twofa']);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Ошибка сервера:', err);
 
-        const serverMessage = err.error?.message || 'Неизвестная ошибка';
+        this.errorMessage = err.error?.message || 'Неизвестная ошибка';
 
-        if (err.status === 409) {
-          this.errorMessage = err.error;
-        } else if (err.status === 500) {
-          this.errorMessage = serverMessage;
-        } else {
-          this.errorMessage = 'Сервер недоступен';
-        }
+        this.cdr.detectChanges();
       }
     });
+
   }
 
 }

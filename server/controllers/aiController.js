@@ -15,7 +15,7 @@ const invokeUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
 const stream = false;
 
 const headers = {
-    "Authorization": process.env.AI_SECRET,
+    "Authorization": "Bearer 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",
     "Accept": stream ? "text/event-stream" : "application/json",
     "Content-Type": "application/json"
 };
@@ -68,11 +68,13 @@ Example valid responses:
         }
 
         const payload = {
-            "model": "google/gemma-3-27b-it",
+            "model": "meta/llama-4-maverick-17b-128e-instruct",
             "messages": [{ "role": "user", content }],
             "max_tokens": 100,
             "temperature": 0.01,
             "top_p": 0.1,
+            "frequency_penalty": 0.00,
+            "presence_penalty": 0.00,
             "stream": false
         };
 

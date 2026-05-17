@@ -11,17 +11,18 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './two-fa.css',
 })
 export class TwoFA {
-  private AuthorizeService: AuthService = inject(AuthService)
+  protected AuthorizeService: AuthService = inject(AuthService)
   protected code: string = '';
   errorMessage: string = '';
 
   constructor(private router: Router) { }
 
-  private sendCode(): void {
+  protected sendCode(): void {
     this.AuthorizeService.sendCode(this.code).subscribe({
       next: (response) => {
         console.log('Успех:', response);
-        this.router.navigate(['authorized']);
+        this.AuthorizeService.checkAuth();
+        this.router.navigate(['/authorized']);
       },
       error: (err) => {
         if (err.status = 400) {

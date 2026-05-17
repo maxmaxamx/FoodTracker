@@ -1,9 +1,3 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f0f0;
-    color: #1a1a1a;
-}
-
 /* ===== HEADER ===== */
 .header {
     padding: 20px 40px;
@@ -360,5 +354,76 @@ body {
 
     100% {
         transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem 1rem;
+    }
+
+    .top-bar {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        justify-content: center;
+    }
+
+    .logo {
+        font-size: 1.8rem;
+    }
+
+    .nav {
+        position: static;
+        transform: none;
+        left: auto;
+        width: 100%;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 0.8rem 1rem;
+    }
+
+    .nav a,
+    .cta {
+        font-size: 0.95rem;
+    }
+
+    .cta {
+        width: auto;
+        padding: 0.8rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.8rem 1rem;
+    }
+
+    .top-bar {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: center;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+    }
+
+    .nav {
+        width: 100%;
+        position: static;
+        transform: none;
+        left: auto;
+        padding: 0.7rem 0.8rem;
+        gap: 0.6rem;
+    }
+
+    .nav a,
+    .cta {
+        font-size: 0.9rem;
+    }
+
+    .cta {
+        width: 100%;
+        max-width: 260px;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit } from '@angular/core';
 import { AuthHead } from "../auth-head/auth-head";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,7 @@ import { FatsecretService } from '../../../services/fatsecret';
 import { splitArray } from '../../../utils/helpers';
 import { FoodExample } from '../../../utils/identifiers';
 import { RouterLink } from "@angular/router";
+import { AuthService } from '../../../services/auth-service';
 
 @Component({
   selector: 'app-add-food',
@@ -16,7 +17,7 @@ import { RouterLink } from "@angular/router";
 export class AddFood {
   private cdr = inject(ChangeDetectorRef);
   private fatsecretService = inject(FatsecretService);
-
+  
   protected query: string = '';
   protected foods: any[] = [];
 

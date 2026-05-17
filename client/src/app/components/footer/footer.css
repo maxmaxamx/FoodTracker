@@ -44,3 +44,49 @@
     font-size: 1vw;
     color: rgba(255, 255, 255, 0.4);
 }
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 3vw 4vw;
+        gap: 1.5vw;
+    }
+
+    .footer-title {
+        font-size: 1.5rem;
+    }
+
+    .footer-links {
+        gap: 1rem;
+    }
+
+    .footer-links a {
+        font-size: 0.95rem;
+    }
+
+    .footer-divider {
+        width: 100%;
+    }
+
+    .footer-copy {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 4vw 3vw;
+        gap: 1.2rem;
+    }
+
+    .footer-links {
+        gap: 1rem;
+    }
+
+    .footer-links a {
+        font-size: 0.9rem;
+    }
+
+    .footer-copy {
+        font-size: 0.8rem;
+    }
+}

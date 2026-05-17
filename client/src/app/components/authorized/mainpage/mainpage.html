@@ -1,6 +1,9 @@
 <div class="container">
     <app-auth-head></app-auth-head>
 
+    <h1>Здравствуйте, {{this.authService.currentName()}}</h1>
+
+
     <select class="date-selector" [(ngModel)]="chosen">
         <option value="" disabled selected>Выбор даты для заполнения</option>
         @for (date of DatesToShow; track date.id) {

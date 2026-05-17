@@ -52,7 +52,7 @@ export function sendEmail(to, subject, text) {
 }
 
 let mailOptions = {
-    from: 'maximnovitskiy274@gmail.com',
+    from: 'foodtracker932@gmail.com',
     to: 'novitskiymaxim08@gmail.com',
     subject: 'Тест OAuth2',
     text: 'Это письмо отправлено через OAuth2!'

@@ -4,7 +4,7 @@
     <div class="content">
         <div class="section-block login-section" id="login">
             <h2 class="section-title login-title">Введите код, котрый пришел на почту: </h2>
-            <h1>email.com</h1>
+            <h1>{{this.AuthorizeService.currentUser()}}</h1>
 
             <form class="login-form" onsubmit="return false;">
                 <div class="form-group">
@@ -15,7 +15,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="login-btn" routerLink="/authorized">
+                <button (click)="sendCode()" type="submit" class="login-btn" routerLink="/authorized">
                     <span class="btn-text">Подтвердить</span>
                 </button>
 

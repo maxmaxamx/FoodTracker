@@ -1,6 +1,7 @@
 .hero {
     background-color: var(--primary-green);
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -19,8 +20,8 @@
 }
 
 .hero .content {
-    width: 1400px;
-    max-width: 90vw;
+    width: min(100%, 1400px);
+    max-width: 100%;
     min-height: 50vw;
     background-color: var(--primary);
     border-radius: 2vw;
@@ -183,4 +184,95 @@
     font-size: 1.4vw;
     color: var(--nonprimary);
     line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding-top: 10vw;
+        padding-bottom: 8vw;
+    }
+
+    .hero .content {
+        padding: 6vw 4vw;
+    }
+
+    .carousel-wrapper {
+        flex-direction: column;
+        gap: 4vw;
+    }
+
+    .screenshot-card {
+        width: min(100%, 320px);
+        height: auto;
+        padding: 3vw;
+    }
+
+    .screenshot-card:hover {
+        transform: translateY(0);
+        box-shadow: 0 10px 25px rgba(43, 220, 140, 0.15);
+    }
+
+    .screenshot-card .card-label {
+        font-size: 3vw;
+        padding: 0.8vw 2vw;
+    }
+
+    .pro-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 3vw 4vw;
+    }
+
+    .pro-icon {
+        width: 6vw;
+        height: 6vw;
+        font-size: 3vw;
+    }
+
+    .pro-text {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding-top: 14vw;
+        padding-bottom: 10vw;
+    }
+
+    .hero .content {
+        padding: 6vw 3vw;
+    }
+
+    .carousel-wrapper {
+        gap: 4vw;
+        flex-direction: column;
+    }
+
+    .screenshot-card {
+        width: min(100%, 280px);
+        height: auto;
+        padding: 3.5vw;
+    }
+
+    .screenshot-card .card-label {
+        font-size: 4vw;
+        padding: 1vw 2.5vw;
+    }
+
+    .pro-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 4vw 4vw;
+    }
+
+    .pro-icon {
+        width: 8vw;
+        height: 8vw;
+        font-size: 4vw;
+    }
+
+    .pro-text {
+        font-size: 3.5vw;
+    }
 }

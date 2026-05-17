@@ -7,13 +7,17 @@ import session from 'express-session';
 
 export const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:4200', 'http://localhost:80'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(session({
     secret: 'mySuperSecretPhrase21323411341335566734recdgdf',
     resave: false,
     saveUninitialized: false,
-    cookie:{
+    cookie: {
         secure: false,
         httpOnly: true
     }
@@ -24,25 +28,16 @@ console.log('FATSECRET_CLIENT_SECRET:', process.env.FATSECRET_CLIENT_SECRET ? '�
 
 app.use("/api", smartRouter);
 
-pool.query('select now()', (err, res) => {
-    if (err) {
-        console.error('error with connection', err.stack);
-    } else {
-        console.log('succesful connection to db', res.rows);
-    }
-});
-
+pool.query('SELECT 1')
+    .then(() => console.log('✅ DB connected'))
+    .catch(err => {
+        console.error('⚠️ DB not ready yet:', err.message);
+        setTimeout(() => {
+            pool.query('SELECT 1').catch(() => { });
+        }, 10000);
+    });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-
-    try {
-        for (let i = 0; i < 10; i++) {
-            sendEmail("ogrenich.kn@gmail.com", "здрайвствуйте", "доствидания");
-        }
-        console.log('Тестовое письмо отправлено');
-    } catch (err) {
-        console.error(' Ошибка при тесте почты:', err);
-    }
     console.log(` Server started on http://localhost:${port}`);
 });

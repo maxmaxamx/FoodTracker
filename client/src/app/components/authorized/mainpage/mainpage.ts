@@ -1,29 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Footer } from "../../footer/footer";
 import { AuthHead } from "../auth-head/auth-head";
 import { subDays } from '../../../utils/helpers';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from "@angular/router";
-
-interface dateToChoose {
-  id: number,
-  dateS: string,
-  date: Date
-}
-
-interface Dish{
-  name: string,
-  carbs: number,
-  fats: number,
-  proteins: number,
-  calories: number
-}
-
-interface DishList{
-  time: string,
-  food: Dish[];
-}
-
+import { RouterLink, Router } from "@angular/router";
+import { AuthService } from '../../../services/auth-service';
+import { dateToChoose, DishList, Dish } from '../../../utils/identifiers';
 
 @Component({
   selector: 'app-mainpage',
@@ -31,11 +13,14 @@ interface DishList{
   templateUrl: './mainpage.html',
   styleUrl: './mainpage.css',
 })
-export class Mainpage {
-  private weekHistory: Dish[]=[];
+export class Mainpage implements OnInit {
+  private weekHistory: Dish[] = [];
   DatesToShow: dateToChoose[] = [];
   chosen: number = 0;
   todayHistory: Dish[] = [];
+  protected authService: AuthService = inject(AuthService);
+
+  constructor(protected router: Router) { }
 
   ngOnInit(): void {
     for (let i = 0; i < 7; i++) {
@@ -48,7 +33,6 @@ export class Mainpage {
       }
     }
   }
-
 
 
 }

@@ -6,7 +6,8 @@
 
 .container {
     background-color: var(--primary-green, #2bdc8c);
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -17,8 +18,8 @@
 }
 
 .content {
-    width: 1400px;
-    max-width: 90vw;
+    width: min(100%, 1400px);
+    max-width: 100%;
     min-height: 40vw;
     background-color: var(--primary);
     border-radius: 2vw;
@@ -420,35 +421,90 @@
     display: none;
 }
 
+@media (max-width: 768px) {
+    .container {
+        padding-top: 10vw;
+        padding-bottom: 6vw;
+    }
 
-.cta {
-    height: 4vw;
-    background: linear-gradient(135deg, var(--primary-green, #2bdc8c) 0%, #24a86a 100%);
-    color: white;
-    border: none;
-    border-radius: 1vw;
-    font-size: 1.4vw;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8vw;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 25px rgba(43, 220, 140, 0.3);
-    padding-right: 2vw;
-    padding-left: 2vw;
+    .content {
+        padding: 6vw 4vw;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .messBox {
+        flex-direction: column;
+        gap: 2vw;
+    }
+
+    .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1rem 1.2rem;
+    }
+
+    .header-title,
+    .header-settings {
+        font-size: 1rem;
+    }
+
+    .messageBox {
+        min-width: 0;
+    }
+
+    #messageInput {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #sendButton {
+        padding: 0 0.8rem;
+    }
 }
 
-.cta:hover {
-    transform: translateY(-0.2vw);
-    box-shadow: 0 12px 35px rgba(43, 220, 140, 0.4);
-}
+@media (max-width: 480px) {
+    .container {
+        padding-top: 12vw;
+        padding-bottom: 8vw;
+    }
 
-.cta:active {
-    transform: translateY(0) scale(0.98);
-}
+    .content {
+        padding: 6vw 3vw;
+        width: 100%;
+        max-width: 100%;
+        grid-template-rows: auto auto;
+        gap: 1rem;
+    }
 
-.cta span {
-    color: white;
+    .messBox {
+        flex-direction: column;
+        gap: 3vw;
+    }
+
+    .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1rem 1rem;
+    }
+
+    .header-title,
+    .header-settings {
+        font-size: 1rem;
+    }
+
+    .messageBox {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #messageInput {
+        width: 100%;
+        min-width: 0;
+        font-size: 3.5vw;
+    }
+
+    #sendButton {
+        padding: 0 0.8rem;
+    }
 }
