@@ -1,8 +1,47 @@
-== Enter " npm i " and then "npm run dev " in the root folder to launch the project ==
+# 🥗 FoodTracker — Счётчик калорий
 
-    {path: '', component: WelcomePage},
-    {path: 'authorized', component: Mainpage},
-    {path: 'login', component: Login},
-    {path: 'signup', component: Signup},
-    {path: 'twofa', component: TwoFA},
-    {path: 'add', component: AddFood}
+Веб-приложение для учёта потребляемых калорий, управления дневным рационом и контроля питания. Проект полностью контейнеризован с помощью Docker и готов к локальному запуску или деплою в изолированном окружении.
+
+> ⚠️ Alpha_Build: проект находится на стадии финализации. Основной функционал работает, возможны небольшие доработки интерфейса и оптимизация.
+
+---
+
+## ✨ Возможности
+- 🔐 Регистрация и авторизация пользователей
+- 📱 Поддержка двухфакторной аутентификации (2FA)
+- 🍎 Добавление продуктов и автоматический подсчёт калорий
+- 📊 Удобный интерфейс с клиентской маршрутизацией
+- 🐳 Полная контейнеризация: запуск в один шаг через Docker Compose
+
+---
+
+## 🛠 Стек технологий
+
+| Frontend |  Angular |
+| Backend | Node.js + Express |
+| База данных | PostgreSQL |
+| Инфраструктура | Docker & Docker Compose |
+
+
+---
+
+## 📦 Требования
+- [Docker](https://www.docker.com/get-started) ≥ 20.10
+- [Docker Compose](https://docs.docker.com/compose/install/) ≥ v2
+- Git
+
+---
+
+## ⚙️ Быстрый старт (Docker)
+
+1. Клонируйте репозиторий:
+```bash
+git clone https://github.com/maxmaxamx/FoodTracker
+cd FoodTracker
+docker-compose up --build -d
+```
+
+Откройте браузер и перейдите по адресу:
+👉 http://localhost:4200 (порт может отличаться, проверьте docker-compose.yml)
+
+При необходимости можете создать свой файл .env и добавить все необходимые api или переменные для запуска
