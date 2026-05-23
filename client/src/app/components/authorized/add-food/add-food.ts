@@ -1,12 +1,11 @@
-import { Component, inject, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { AuthHead } from "../auth-head/auth-head";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FatsecretService } from '../../../services/fatsecret';
 import { splitArray } from '../../../utils/helpers';
-import { FoodExample } from '../../../utils/identifiers';
 import { RouterLink } from "@angular/router";
-import { AuthService } from '../../../services/auth-service';
+import { SendFood } from '../../../services/send-food';
 
 @Component({
   selector: 'app-add-food',
@@ -17,17 +16,27 @@ import { AuthService } from '../../../services/auth-service';
 export class AddFood {
   private cdr = inject(ChangeDetectorRef);
   private fatsecretService = inject(FatsecretService);
-  
+  private foodService = inject(SendFood);
+
   protected query: string = '';
+
+  private foodsOriginal: any[] = [];
   protected foods: any[] = [];
 
   protected selectedFood: any = null;
   protected isLoading: boolean = false;
-  protected notfound: boolean = false
+  protected notfound: boolean = false;
+
+  editingRowId: number | null = null;
+
+  draftValue: number | string | null = 100;
+
+  currentWeight: number = 100;
 
   search() {
     if (!this.query.trim()) {
       this.foods = [];
+      this.foodsOriginal = [];
       return;
     }
 
@@ -36,12 +45,17 @@ export class AddFood {
 
     this.fatsecretService.searchFoods(this.query).subscribe({
       next: data => {
-        const processed: any[] = splitArray(data);
-        this.foods = [...processed];
+        const processed = splitArray(data);
+
+        this.foodsOriginal = processed.map(food => ({ ...food }));
+
+        this.currentWeight = 100;
+        this.draftValue = 100;
+
+        this.recalculateFoods();
+
         this.isLoading = false;
-        if (data.length === 0)
-          this.notfound = true    
-        console.log('Первый продукт:', data[0]);
+        this.notfound = data.length === 0;
         this.cdr.detectChanges();
       },
       error: err => {
@@ -52,25 +66,65 @@ export class AddFood {
     });
   }
 
-  loadFood(id: string) {
-    // this.fatsecretService.getFoodById(id).subscribe({
-    //   next: data => {
-    //     this.selectedFood = data;
-    //     console.log(' Продукт:', data);
-    //   },
-    //   error: err => {
-    //     console.error(' Ошибка:', err);
-    //   }
-    // });    
+  startEdit(food: any): void {
+    this.editingRowId = food.id;
+    this.draftValue = this.currentWeight;
   }
 
-  getServing(food: any) {
-    const servings = food?.servings?.serving;
-    if (!servings) return null;
-    return Array.isArray(servings) ? servings[0] : servings;
+  saveEdit(): void {
+    if (this.draftValue === null || this.draftValue === undefined || this.draftValue === '') {
+      return;
+    }
+
+    const newWeight = Number(this.draftValue);
+
+    if (isNaN(newWeight) || newWeight <= 0) {
+      return;
+    }
+
+    this.currentWeight = newWeight;
+    this.recalculateFoods();
+
+    this.editingRowId = null;
+    this.draftValue = this.currentWeight;
   }
 
-  applyFood(){
-    
+  cancelEdit(): void {
+    this.editingRowId = null;
+    this.draftValue = this.currentWeight;
+  }
+
+  private recalculateFoods(): void {
+    const weightRatio = this.currentWeight / 100;
+
+    this.foods = this.foodsOriginal.map(food => ({
+      id: food.id,
+      name: food.name,
+      protein: +(food.protein * weightRatio).toFixed(1),
+      fat: +(food.fat * weightRatio).toFixed(1),
+      carbs: +(food.carbs * weightRatio).toFixed(1),
+      calories: +(food.calories * weightRatio).toFixed(1),
+    }));
+  }
+
+  applyAdding(food: any): void {
+    if (this.foodService.foodDay() === '') return;
+
+    this.foodService.send({
+      Name: food.name,
+      Calories: Math.round(food.calories),
+      Fats: Math.round(food.fat),
+      Carbs: Math.round(food.carbs),
+      Proteins: Math.round(food.protein),
+      Intake: this.foodService.timeIntake(),
+      date: this.foodService.foodDay()
+    }).subscribe({
+      next: () => {
+        window.alert('Еда добавлена в базу');
+      },
+      error: (err) => {
+        window.alert('Ошибка при отправке: ' + (err.error?.message || err.message || 'Неизвестная ошибка сервера'));
+      }
+    });
   }
 }

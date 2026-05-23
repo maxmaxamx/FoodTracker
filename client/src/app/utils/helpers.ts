@@ -12,22 +12,21 @@ export function splitArray(array: any): any[] {
 
     for (let i = 0; i < array.length; i++) {
         const str = array[i].food_description;
-
         let obj: any = {};
 
-        str.split(/ - | \| /).slice(1).forEach((item: any) => {
+        str.split(/ - | \| /).slice(1).forEach((item: string) => {
             const [key, value] = item.split(": ");
-            obj[key] = value;
+            obj[key] = parseFloat(value || "0") || 0;
         });
 
         filtered.push({
             id: array[i].food_id,
             name: array[i].food_name,
-            protein: obj.Protein,
-            fat: obj.Fat,
-            carbs: obj.Carbs,
-            calories: obj.Calories,
-        })
+            protein: obj.Protein || 0,
+            fat: obj.Fat || 0,
+            carbs: obj.Carbs || 0,
+            calories: obj.Calories || 0,
+        });
     }
 
     return filtered;

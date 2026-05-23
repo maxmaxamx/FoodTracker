@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.messages{
+    scroll-behavior: auto;
+}
+
 .container {
     background-color: var(--primary-green, #2bdc8c);
     width: 100%;

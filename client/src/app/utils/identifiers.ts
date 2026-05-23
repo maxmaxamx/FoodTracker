@@ -4,11 +4,14 @@ export interface User {
   password: string
 }
 
-export interface FoodExample{
-  Calories: string,
-  Fats: string,
-  Carbs: string,
-  Proteins: string
+export interface FoodExample {
+  Id: number,
+  Name: string,
+  Calories: number,
+  Fats: number,
+  Carbs: number,
+  Proteins: number,
+  Intake?: Intakes
 }
 
 
@@ -18,15 +21,6 @@ export interface dateToChoose {
   date: Date
 }
 
-export interface Dish{
-  name: string,
-  carbs: number,
-  fats: number,
-  proteins: number,
-  calories: number
-}
+export type messageTemplate = | { isAI: true; data: FoodExample; time: string } | { isAI: false; text: string; time: string };
 
-export interface DishList{
-  time: string,
-  food: Dish[];
-}
+export type Intakes = "Breakfast" | "Lunch" | "Dinner";

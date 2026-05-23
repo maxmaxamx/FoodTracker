@@ -18,17 +18,33 @@
                         <th>Белки</th>
                         <th>Жиры</th>
                         <th>Углеводы</th>
-                        <th>Калории(на 100г)</th>
+                        <th>Калории</th>
+                        <th>Вес г</th>
+                        <th>Добавить</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (food of foods; track food.id) {
-                    <tr (click)="loadFood(food.id)" style="cursor: pointer;">
+                    <tr style="cursor: pointer;">
                         <td>{{ food.name }}</td>
                         <td>{{ food.protein ?? '—' }}</td>
                         <td>{{ food.fat ?? '—' }}</td>
                         <td>{{ food.carbs ?? '—' }}</td>
                         <td>{{ food.calories ?? '—' }}</td>
+                        <td (dblclick)="startEdit(food)">
+                            @if (editingRowId === food.id) {
+                            <input class="edit-input" type="number" [(ngModel)]="draftValue" (blur)="saveEdit()"
+                                (keyup.enter)="saveEdit()" (keyup.escape)="cancelEdit()" #editInput autofocus>
+                            } @else {
+                            {{ draftValue ?? 100 }}
+                            }
+                        </td>
+                        <td><button class="delete-btn" (click)="applyAdding(food)"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                    viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4zm-6 4q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zM5 5v14z" />
+                                </svg></button></td>
+
                     </tr>
                     }
                 </tbody>
@@ -62,8 +78,9 @@
         </div>
 
         <div class="buttons-container">
-            <button class="btn btn-add-photo" [routerLink]="['/ai']" routerLinkActive="router-link-active" >Добавить по фото</button>
-            <button class="btn btn-home" routerLink="/authorized" (click)="applyFood()">Подтвердить</button>
+            <button class="btn btn-add-photo" [routerLink]="['/ai']" routerLinkActive="router-link-active">Добавить по
+                фото</button>
+            <button class="btn btn-home" routerLink="/authorized">Подтвердить</button>
         </div>
 
     </div>

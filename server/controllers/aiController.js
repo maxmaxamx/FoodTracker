@@ -44,19 +44,27 @@ async function imageToDataUrl(filePath) {
 async function makeRequest(filePath) {
     try {
         const textPrompt = `You are a nutrition analysis API. 
-Your ONLY task is to analyze food images and respond with EXACTLY this format:
-Calories: [number]kcal, Proteins: [number]g, Fats: [number]g, Carbs: [number]g
+Your ONLY task is to analyze food images and respond with EXACTLY a single JSON object.
 
 RULES:
-1. Return ONLY this single line, no other text, no explanations, no markdown.
-2. If you cannot determine a value, write "unknown" instead of a number.
-3. Do not add periods, extra spaces, or formatting.
-4. Do not say "I see", "Here is", or any other preamble.
-5. If the image is not food, respond: Calories: unknown, Proteins: unknown, Fats: unknown, Carbs: unknown
+1. Return ONLY the raw JSON object. No markdown blocks (do not use json), no other text, no explanations.
+2. The JSON object must strictly match this TypeScript interface:
+interface FoodExample {
+  Name: string; // MUST BE IN RUSSIAN
+  Calories: number;
+  Fats: number;
+  Carbs: number;
+  Proteins: number;
+}
+3. The "Name" field must always be written in Russian (e.g., "Салат с курицей гриль").
+4. All nutrient values (Calories, Fats, Carbs, Proteins) MUST be raw numbers. Do not include units like "g" or "kcal".
+5. If you cannot determine a nutrient value, use -1 as the number value.
+6. Do not add periods, extra spaces, or preamble.
+7. If the image is not food, use "unknown" for Name, and -1 for all nutrient fields.
 
-Example valid responses:
-✓ Calories: 250kcal, Proteins: 12g, Fats: 8g, Carbs: 35g
-✓ Calories: unknown, Proteins: 5g, Fats: unknown, Carbs: 20g`;
+Example valid response:
+{"Name":"Салат с курицей гриль","Calories":250,"Fats":8,"Carbs":15,"Proteins":30}
+`;
 
         let content = []
         if (filePath) {

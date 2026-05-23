@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { EventEmitter, inject, Injectable, signal } from '@angular/core';
 import { catchError, tap, throwError } from 'rxjs';
 import { User } from '../utils/identifiers';
+import { Router } from '@angular/router';
 export interface AuthResponse {
   authorized: boolean,
   email: string,
@@ -14,6 +15,7 @@ export class AuthService {
   private http: HttpClient = inject(HttpClient);
   private loginApi: string = '/api/login';
   private registerApi: string = '/api/register';
+  protected router: Router = inject(Router);
 
 
   isAuthorized = signal<boolean>(false);
@@ -29,7 +31,7 @@ export class AuthService {
         this.isAuthorized.set(res.authorized);
         this.currentUser.set(res.email);
         this.currentName.set(res.username);
-        console.log('auth',this.isAuthorized(), this.currentUser(), this.currentName());
+        console.log('auth', this.isAuthorized(), this.currentUser(), this.currentName());
       }),
       catchError((err) => {
         this.isAuthorized.set(false);
@@ -41,7 +43,15 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.post('/api/logout', {}, { withCredentials: true });
+    return this.http.post('/api/logout', {}, { withCredentials: true }).subscribe({
+      next: () => {
+        this.isAuthorized.set(false);
+        this.currentUser.set(null);
+        this.currentName.set(null);
+        this.router.navigate(['/']);
+      },
+      error: (err) => console.error('Logout error:', err)
+    });
   }
 
 

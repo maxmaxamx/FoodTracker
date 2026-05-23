@@ -82,50 +82,149 @@
 
 /* === TABLE === */
 .table-container {
-    padding: 0 16px;
-    margin-bottom: 12px;
+    width: 100%;
+    min-width: 0;
+    /* 🔑 Критично: разрешает flex-элементу сжиматься */
+    overflow: hidden;
+    /* Обрезает всё, что пытается вылезти за границы */
+    margin-bottom: 1.5vw;
+    border-radius: 0.8vw;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
 }
+
+/* Стили скроллбара можно удалить: без overflow-y они не работают */
 
 .food-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: #fff;
-}
-
-.food-table thead th {
-    background-color: #e8e8e8;
-    padding: 10px 6px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #555;
-    text-align: center;
-    border-bottom: 1px solid #d5d5d5;
-}
-
-.food-table thead th:first-child {
+    border-collapse: collapse;
+    font-size: 1.15vw;
     text-align: left;
-    padding-left: 12px;
+    color: #1e293b;
 }
 
-.food-table tbody td {
-    padding: 12px 6px;
-    font-size: 14px;
-    text-align: center;
-    background-color: #d5d5d5;
-    border-bottom: 1px solid #d5d5d5;
+.food-table th {
+    position: sticky;
+    top: 0;
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    padding: 1vw 1.2vw;
+    border-bottom: 2px solid #cbd5e1;
+    z-index: 2;
+    font-size: 1vw;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
-.food-table tbody td:first-child {
-    text-align: left;
-    padding-left: 12px;
-    font-weight: 500;
+.food-table td {
+    padding: 1vw 1.2vw;
+    border-bottom: 1px solid #e2e8f0;
+    line-height: 1.4;
+    word-break: break-word;
+    /*  Длинные названия не ломают ширину */
+}
+
+.food-table tbody tr {
+    transition: background 0.2s;
+}
+
+.food-table tbody tr:hover {
+    background: #f0fdf4;
 }
 
 .food-table tbody tr:last-child td {
     border-bottom: none;
+}
+
+.food-table td:nth-child(n+2) {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.food-table tfoot td {
+    border: none;
+    padding: 0.5vw 0;
+    text-align: center;
+}
+
+.food-table thead th {
+    text-align: center;
+}
+
+.food-table tbody td {
+    text-align: center;
+}
+
+.food-table td:first-child {
+    text-align: left;
+    padding-left: 2vw;
+}
+
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4vw;
+    padding: 0.4vw 0.8vw;
+    background: #ecfdf5;
+    /* Твой зеленый (Emerald-600) */
+    border: 1px solid #6ee7b7;
+    /* Светло-зеленая рамка */
+    border-radius: 0.5vw;
+    color: #6ee7b7;
+    /* Белый текст для контраста */
+    font-size: 0.85vw;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.delete-btn:hover {
+    background: #059669;
+    /* Очень светлый фон при наведении (как #fef2f2) */
+    border-color: #34d399;
+    /* Яркая рамка при наведении */
+    color: #065f46;
+    /* Темно-зеленый текст (читается на светлом фоне) */
+    transform: translateY(-1px);
+}
+
+.delete-btn:active {
+    transform: scale(0.97);
+    background: #047857;
+    /* Чуть темнее при клике */
+}
+
+.delete-btn:focus-visible {
+    outline: 2px solid #10b981;
+    /* Зеленая обводка фокуса */
+    outline-offset: 2px;
+}
+
+.delete-btn svg {
+    line-height: 1;
+}
+
+
+.edit-input {
+    width: 100%;
+    padding: 0.4vw;
+    border: 1px solid var(--primary-green);
+    border-radius: 0.4vw;
+    background: #f0fff4;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: center;
+    color: #1e293b;
+    outline: none;
+}
+
+.edit-input:focus {
+    border-color: #059669;
+    box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
 }
 
 /* === BUTTONS === */
@@ -503,4 +602,3 @@
         font-size: 3.5vw;
     }
 }
-

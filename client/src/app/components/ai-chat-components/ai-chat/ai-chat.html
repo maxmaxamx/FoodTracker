@@ -1,16 +1,16 @@
 <div class="container">
     <app-auth-head></app-auth-head>
     <div class="content">
-        <h1>Загрузите фото для подсчета калорий</h1>
         <div class="messages">
-            <!-- <div class="messBox">
-                <app-message></app-message>
-            </div>
-            <div class="messBox">
-                <app-message></app-message>
-            </div> -->
 
-            <h1>{{aiResponse}}</h1>
+            @for(mess of chatHistory; track $index){
+            @if(mess.isAI){
+            <app-message [foodData]="mess.data" [sender]="mess.isAI" [time]="mess.time"></app-message>
+            }@else if (!mess.isAI) {
+            <app-message [text]="mess.text" [sender]="mess.isAI" [time]="mess.time"></app-message>
+            }
+            }
+
         </div>
         <div class="formField">
             <div class="messageBox">
@@ -24,7 +24,7 @@
                             <path stroke-linecap="round" stroke-width="25" stroke="var(--nonprimary)"
                                 d="M79 167.138H259"></path>
                         </svg>
-                        <span class="tooltip">Add an image</span>
+                        <span class="tooltip">Добавить фото</span>
                     </label>
 
                     @if (selectedFile) {

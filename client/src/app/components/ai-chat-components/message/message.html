@@ -1,14 +1,45 @@
-<div class="message-container">
-    <div class="messages">
-        <div class="message-container ai">
-            <div class="message-avatar">🤖</div>
-            <div class="message-bubble">
-                <div class="message-text">asdasd</div>
-                <div class="message-meta">
-                    <span class="message-time">time</span>
-                </div>
+<div class="messages">
+
+    @if(sender){
+    <div class="message-avatar">🤖</div>
+    <div class="nutrition-card">
+        <div class="nutrition-header">
+            <h3 class="nutrition-title">{{foodData.Name}} <br>Пищевая ценность</h3>
+            <button class="btn-add" type="button" (click)="this.pushFoodItem()">Добавить</button>
+        </div>
+
+        <div class="nutrition-grid">
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{foodData.Proteins}}г</span>
+                <span class="nutrition-label">Белки</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{foodData.Fats}}г</span>
+                <span class="nutrition-label">Жиры</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{foodData.Carbs}}г</span>
+                <span class="nutrition-label">Углеводы</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{foodData.Calories}}ккал</span>
+                <span class="nutrition-label">Калории</span>
             </div>
         </div>
 
+        <div class="message-meta">
+            <span class="message-time">{{time}}</span>
+        </div>
     </div>
+    }@else {
+    <div class="message-container user">
+        <div class="message-bubble">
+            <div class="message-text">{{text}}</div>
+            <div class="message-meta">
+                <span class="message-time">{{time}}</span>
+            </div>
+        </div>
+        <div class="message-avatar">👤</div>
+    </div>
+    }
 </div>

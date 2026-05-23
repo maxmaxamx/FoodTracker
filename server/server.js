@@ -4,6 +4,7 @@ import smartRouter from "./routes/smartRouter.js"
 import { pool } from "./database.js";
 import { sendEmail, sendMAIL } from './helpers/mailSETUP.js';
 import session from 'express-session';
+import connectPgSimple from 'connect-pg-simple';
 
 export const app = express();
 
@@ -13,15 +14,33 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+
+// app.use(session({
+//     secret: 'mySuperSecretPhrase21323411341335566734recdgdf',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         secure: false,
+//         httpOnly: true
+//     }
+// }))
+
+const pgSession = connectPgSimple(session.default || session);
+
 app.use(session({
-    secret: 'mySuperSecretPhrase21323411341335566734recdgdf',
+    store: new pgSession({
+        pool: pool,
+        tableName: 'session'
+    }),
+    secret: process.env.SESSION_SECRET || 'секрет',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
-        httpOnly: true
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        sameSite: true,
+        secure: false
     }
-}))
+}));
 
 console.log('FATSECRET_CLIENT_ID:', process.env.FATSECRET_CLIENT_ID ? '✅' : '❌');
 console.log('FATSECRET_CLIENT_SECRET:', process.env.FATSECRET_CLIENT_SECRET ? '✅' : '❌');

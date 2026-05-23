@@ -20,6 +20,7 @@ export async function addUser(req, res) {
             return res.status(409).json({ message: "Такой пользователь уже существует" });
         }
 
+
         const hashedPass = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
@@ -29,6 +30,7 @@ export async function addUser(req, res) {
 
         req.session.email = email;
         req.session.name = username;
+        req.session.userId = result.rows[0].id;
 
         await getCode(req, res);
 
@@ -65,6 +67,7 @@ export async function loginUser(req, res) {
 
         req.session.email = user.email;
         req.session.name = user.username;
+        req.session.userId = user.id;
 
         await getCode(req, res);
 
@@ -100,6 +103,7 @@ export function checkCode(req, res) {
 
     if (req.query.code === req.session.verifCode) {
         req.session.isLoged = true;
+        req.session.verifCode = req.query.code;
         return res.status(200).json({ message: 'correct code' });
     } else {
         req.session.isLoged = false;
@@ -126,8 +130,11 @@ export function checkAuth(req, res) {
 export function logoutUser(req, res) {
     req.session.destroy((err) => {
         if (err) {
-            return console.log(err);
+            console.log(err);
+            return res.status(500).json({ message: 'Logout failed' });
         }
-        res.redirect('/');
+
+        res.clearCookie('connect.sid');
+        res.status(200).json({ message: 'Logged out' });
     });
 }

@@ -1,20 +1,156 @@
-
 .message-container {
     display: flex;
     align-items: flex-start;
-    gap: 1vw;
-    padding: 1vw 0;
-    animation: messageSlide 0.25s ease;
+    gap: 16px;
+    padding: 12px 0;
+    max-width: 100%;
+    opacity: 0;
+    animation: messageFadeIn 0.35s ease forwards;
 }
 
-.message-container.user {
-    flex-direction: row-reverse;
+.message-container.ai {
+    flex-direction: row;
+    justify-content: flex-start;
+    animation-name: messageSlideLeft;
 }
 
-@keyframes messageSlide {
+.user {
+    justify-content: flex-end;
+    animation-name: messageSlideRight;
+}
+
+.message-time {
+    color: black;
+}
+
+
+/* ===== КАРТОЧКА НУТРИЕНТОВ ===== */
+
+.nutrition-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8e8e8;
+    max-width: 100%;
+}
+
+/* ----- Заголовок с кнопкой ----- */
+.nutrition-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.nutrition-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.btn-add {
+    background: #2bdc8c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.btn-add:hover {
+    background: #24c07a;
+    transform: translateY(-1px);
+}
+
+.btn-add:active {
+    transform: translateY(0);
+    background: #1fa368;
+}
+
+/* ----- Сетка с 4 колонками ----- */
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.nutrition-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 4px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.nutrition-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+}
+
+.nutrition-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* ===== АДАПТАЦИЯ: МОБИЛЬНЫЕ (до 768px) ===== */
+@media (max-width: 768px) {
+    .nutrition-header {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .nutrition-title {
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .btn-add {
+        width: 100%;
+        max-width: 140px;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .nutrition-item {
+        padding: 12px 8px;
+        border-radius: 12px;
+    }
+
+    .nutrition-value {
+        font-size: 17px;
+    }
+
+    .nutrition-label {
+        font-size: 12px;
+    }
+}
+
+
+/* ----- Анимации появления ----- */
+@keyframes messageFadeIn {
     from {
         opacity: 0;
-        transform: translateY(0.5vw);
+        transform: translateY(8px);
     }
 
     to {
@@ -23,139 +159,248 @@
     }
 }
 
+@keyframes messageSlideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-16px) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+    }
+}
+
+@keyframes messageSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(16px) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* Задержка для эффекта «волны» */
+.message-container:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.message-container:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.message-container:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+.message-container:nth-child(4) {
+    animation-delay: 0.24s;
+}
+
+.message-container:nth-child(5) {
+    animation-delay: 0.32s;
+}
+
+/* ----- Аватар ----- */
 .message-avatar {
     flex-shrink: 0;
-    width: 3.5vw;
-    height: 3.5vw;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.6vw;
-    background: var(--primary);
+    font-size: 24px;
+    background: #2bdc8c;
     color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    animation: avatarPop 0.3s ease forwards;
+    animation-delay: inherit;
 }
 
-.message-container.user .message-avatar {
-    background: var(--primary-green);
+@keyframes avatarPop {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    60% {
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
+/* ----- Пузырь сообщения ----- */
 .message-bubble {
     max-width: 75%;
-    padding: 1.2vw 1.8vw;
-    border-radius: 1.5vw;
-    background: var(--primary);
-    border: 1px solid var(--border-surface, #e0e0e0);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    padding: 16px 24px;
+    border-radius: 20px;
     position: relative;
+    word-wrap: break-word;
+    animation: bubblePop 0.25s ease-out forwards;
+    animation-delay: inherit;
 }
 
-.message-container.user .message-bubble {
-    background: linear-gradient(135deg, var(--primary-green, #2bdc8c) 0%, #24a86a 100%);
+@keyframes bubblePop {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+
+    70% {
+        transform: scale(1.01);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Стиль для ИИ (зелёный, слева) — хвостик слева */
+.message-container.ai .message-bubble {
+    background: linear-gradient(135deg, #2bdc8c 0%, #24a86a 100%);
     color: white;
     border: none;
-    border-radius: 1.5vw 0.4vw 1.5vw 1.5vw;
+    border-radius: 20px 20px 20px 4px;
+    /* Острый НИЖНИЙ ЛЕВЫЙ угол = хвост слева */
     box-shadow: 0 6px 20px rgba(43, 220, 140, 0.25);
 }
 
-.message-container.ai .message-bubble {
-    border-radius: 0.4vw 1.5vw 1.5vw 1.5vw;
+/* Стиль для пользователя (белый, справа) — хвостик справа */
+.message-container.user .message-bubble {
+    background: white;
+    color: #1a1a1a;
+    border: 1px solid #e8e8e8;
+    border-radius: 20px 4px 20px 20px;
+    /* Острый ВЕРХНИЙ ПРАВЫЙ угол = хвост справа */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* === Текст сообщения === */
+/* ----- Текст сообщения ----- */
 .message-text {
-    font-size: 1.15vw;
+    font-size: 17px;
     line-height: 1.5;
-    word-wrap: break-word;
     white-space: pre-wrap;
-    color: var(--nonprimary);
+    word-break: break-word;
 }
 
-
-/* === Мета-информация (время) === */
+/* ----- Время отправки ----- */
 .message-meta {
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.6vw;
-    font-size: 0.85vw;
-    opacity: 0.6;
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.5);
+    animation: metaFadeIn 0.2s ease forwards;
+    animation-delay: 0.45s;
 }
 
-.message-container.user .message-meta {
-    opacity: 0.85;
-    color: rgba(255, 255, 255, 0.9);
+.message-container.ai .message-meta {
+    color: rgba(255, 255, 255, 0.85);
 }
 
+@keyframes metaFadeIn {
+    from {
+        opacity: 0;
+    }
 
-@media (max-width: 768px) {
+    to {
+        opacity: 1;
+    }
+}
+
+/* ----- Отключение анимаций ----- */
+@media (prefers-reduced-motion: reduce) {
+
+    .message-container,
+    .message-avatar,
+    .message-bubble,
+    .message-meta {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* ===== АДАПТАЦИЯ: ПЛАНШЕТЫ (до 1024px) ===== */
+@media (max-width: 1024px) {
     .message-container {
-        gap: 2.5vw;
-        padding: 2.5vw 0;
+        gap: 14px;
+        padding: 10px 0;
     }
 
     .message-avatar {
-        width: 9vw;
-        height: 9vw;
-        font-size: 4vw;
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+
+    .message-bubble {
+        max-width: 78%;
+        padding: 14px 20px;
+        border-radius: 16px;
+    }
+
+    .message-container.ai .message-bubble {
+        border-radius: 16px 16px 16px 4px;
+    }
+
+    .message-container.user .message-bubble {
+        border-radius: 16px 4px 16px 16px;
+    }
+
+    .message-text {
+        font-size: 16px;
+    }
+
+    .message-meta {
+        font-size: 12px;
+        margin-top: 6px;
+    }
+}
+
+/* ===== АДАПТАЦИЯ: МОБИЛЬНЫЕ (до 768px) ===== */
+@media (max-width: 768px) {
+    .message-container {
+        gap: 12px;
+        padding: 8px 0;
+    }
+
+    .message-avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
     }
 
     .message-bubble {
         max-width: 85%;
-        padding: 3vw 4vw;
-        border-radius: 4vw;
-    }
-
-    .message-container.user .message-bubble {
-        border-radius: 4vw 1vw 4vw 4vw;
+        padding: 12px 18px;
+        border-radius: 14px;
     }
 
     .message-container.ai .message-bubble {
-        border-radius: 1vw 4vw 4vw 4vw;
-    }
-
-    .message-text {
-        font-size: 3.8vw;
-    }
-
-    .message-meta {
-        font-size: 3vw;
-        margin-top: 1.5vw;
-    }
-}
-
-@media (max-width: 480px) {
-    .message-container {
-        gap: 3vw;
-        padding: 3vw 0;
-    }
-
-    .message-avatar {
-        width: 11vw;
-        height: 11vw;
-        font-size: 5vw;
-    }
-
-    .message-bubble {
-        max-width: 100%;
-        padding: 4vw 5vw;
-        border-radius: 5vw;
+        border-radius: 14px 14px 14px 4px;
     }
 
     .message-container.user .message-bubble {
-        border-radius: 5vw 1.2vw 5vw 5vw;
-    }
-
-    .message-container.ai .message-bubble {
-        border-radius: 1.2vw 5vw 5vw 5vw;
+        border-radius: 14px 4px 14px 14px;
     }
 
     .message-text {
-        font-size: 4.5vw;
+        font-size: 15px;
     }
 
     .message-meta {
-        font-size: 3.5vw;
-        margin-top: 2vw;
+        font-size: 11px;
+        margin-top: 4px;
     }
 }

@@ -4,7 +4,7 @@
     <h1>Здравствуйте, {{this.authService.currentName()}}</h1>
 
 
-    <select class="date-selector" [(ngModel)]="chosen">
+    <select class="date-selector" [(ngModel)]="chosen" (change)="click()">
         <option value="" disabled selected>Выбор даты для заполнения</option>
         @for (date of DatesToShow; track date.id) {
         <option [value]="date.id">{{ date.dateS }}</option>
@@ -12,36 +12,181 @@
     </select>
 
     <div class="main-container">
-
         <div class="meals-row">
             <div class="meal-card">
                 <h3>Завтрак</h3>
-                <p class="placeholder-text">
-                    Тут будут отображаться<br>
-                    записанные продукты
-                </p>
-                <button class="add-food-btn" routerLink="/add">+ добавить еду</button>
+                @if(breakfastHistory.length>0){
+                <div class="table-container">
+                    <table class="food-table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Белки</th>
+                                <th>Жиры</th>
+                                <th>Углеводы</th>
+                                <th>Калории</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (food of (isExpanded.breakfast ? breakfastHistory : breakfastHistory.slice(0, 2));
+                            track
+                            food.Id) {
+                            <tr>
+                                <td>{{ food.Name }}</td>
+                                <td>{{ food.Proteins }}</td>
+                                <td>{{ food.Fats }}</td>
+                                <td>{{ food.Carbs }}</td>
+                                <td>{{ food.Calories }}</td>
+                                <td><button class="delete-btn" (click)="deleteClick(food.Id)"><svg xmlns="http://www.w3.org/2000/svg" width="32"
+                                            height="32" viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+                                        </svg></button></td>
+                            </tr>
+                            }
+                        </tbody>
+
+                        @if (breakfastHistory.length > 2) {
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="table-footer-cell">
+                                    <button class="toggle-btn" (click)="toggleTable('breakfast')">
+                                        {{ isExpanded.breakfast ? '▲ Свернуть' : '▼ Развернуть (' +
+                                        breakfastHistory.length
+                                        + ')' }}
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        }
+                    </table>
+
+                </div>
+
+                }@else{
+                <p class="placeholder-text">Тут будут отображаться<br>записанные продукты</p>
+                }
+
+                <button class="add-food-btn" (click)="foodService.setBreakfast()">+ добавить еду</button>
+
             </div>
 
             <div class="meal-card">
                 <h3>Обед</h3>
-                <p class="placeholder-text">
-                    Тут будут отображаться<br>
-                    записанные продукты
-                </p>
-                <button class="add-food-btn" routerLink="/add">+ добавить еду</button>
+                @if(lunchHistory.length>0){
+                <div class="table-container">
+                    <table class="food-table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Белки</th>
+                                <th>Жиры</th>
+                                <th>Углеводы</th>
+                                <th>Калории</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (food of (isExpanded.lunch ? lunchHistory : lunchHistory.slice(0, 2));
+                            track
+                            food.Id) {
+                            <tr>
+                                <td>{{ food.Name }}</td>
+                                <td>{{ food.Proteins }}</td>
+                                <td>{{ food.Fats }}</td>
+                                <td>{{ food.Carbs }}</td>
+                                <td>{{ food.Calories }}</td>
+                                <td><button class="delete-btn" (click)="deleteClick(food.Id)"><svg xmlns="http://www.w3.org/2000/svg" width="32"
+                                            height="32" viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+                                        </svg></button></td>
+                            </tr>
+                            }
+                        </tbody>
+
+                        @if (lunchHistory.length > 2) {
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="table-footer-cell">
+                                    <button class="toggle-btn" (click)="toggleTable('lunch')">
+                                        {{ isExpanded.lunch ? '▲ Свернуть' : '▼ Развернуть (' + lunchHistory.length
+                                        + ')' }}
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        }
+                    </table>
+
+                </div>
+
+                }@else{
+                <p class="placeholder-text">Тут будут отображаться<br>записанные продукты</p>
+                }
+                <button class="add-food-btn" (click)="foodService.setLunch()">+ добавить еду</button>
             </div>
 
+            <!-- Ужин -->
             <div class="meal-card">
                 <h3>Ужин</h3>
-                <p class="placeholder-text">
-                    Тут будут отображаться<br>
-                    записанные продукты
-                </p>
-                <button class="add-food-btn" routerLink="/add">+ добавить еду</button>
+                @if(dinnerHistory.length>0){
+                <div class="table-container">
+                    <table class="food-table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Белки</th>
+                                <th>Жиры</th>
+                                <th>Углеводы</th>
+                                <th>Калории</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (food of (isExpanded.dinner ? dinnerHistory : dinnerHistory.slice(0, 2));
+                            track
+                            food.Id) {
+                            <tr>
+                                <td>{{ food.Name }}</td>
+                                <td>{{ food.Proteins }}</td>
+                                <td>{{ food.Fats }}</td>
+                                <td>{{ food.Carbs }}</td>
+                                <td>{{ food.Calories }}</td>
+                                <td><button class="delete-btn" (click)="deleteClick(food.Id)"><svg xmlns="http://www.w3.org/2000/svg" width="32"
+                                            height="32" viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+                                        </svg></button></td>
+                            </tr>
+                            }
+                        </tbody>
+
+                        @if (dinnerHistory.length > 2) {
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="table-footer-cell">
+                                    <button class="toggle-btn" (click)="toggleTable('dinner')">
+                                        {{ isExpanded.dinner ? '▲ Свернуть' : '▼ Развернуть (' + dinnerHistory.length
+                                        + ')' }}
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        }
+                    </table>
+
+                </div>
+
+                }@else{
+                <p class="placeholder-text">Тут будут отображаться<br>записанные продукты</p>
+                }
+                <button class="add-food-btn" (click)="foodService.setDinner()">+ добавить еду</button>
             </div>
         </div>
 
+        <!-- 2. Разделители и статистика (соседи .meals-row, а не дети) -->
         <div class="wavy-divider">
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path class="wave-path"
@@ -54,26 +199,25 @@
 
         <div class="stats-section">
             <p class="stats-label">Общая статистика по калориям, белкам, жирам, углеводам</p>
-
             <div class="stats-cards">
                 <div class="stat-card">
                     <div class="stat-icon">🔥</div>
-                    <div class="stat-value">1 850</div>
+                    <div class="stat-value">{{totalCalories}}</div>
                     <div class="stat-label">ккал</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🥩</div>
-                    <div class="stat-value">120г</div>
+                    <div class="stat-value">{{totalProteins}}г</div>
                     <div class="stat-label">белки</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🧈</div>
-                    <div class="stat-value">65г</div>
+                    <div class="stat-value">{{totalFats}}г</div>
                     <div class="stat-label">жиры</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🍞</div>
-                    <div class="stat-value">210г</div>
+                    <div class="stat-value">{{totalCarbs}}г</div>
                     <div class="stat-label">углеводы</div>
                 </div>
             </div>
@@ -88,8 +232,5 @@
                     opacity="0.5" />
             </svg>
         </div>
-
     </div>
-
-
 </div>
