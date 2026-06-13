@@ -42,6 +42,6 @@ __screenshots__/
 Thumbs.db
 
 
-server/.env
+.env
 server/node_modules
 client/node_modules
