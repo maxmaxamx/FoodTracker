@@ -8,11 +8,6 @@ import connectPgSimple from 'connect-pg-simple';
 
 export const app = express();
 
-app.use(cors({
-    origin: ['http://localhost:4200', 'http://localhost:80'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
 app.use(express.json());
 
 // app.use(session({
@@ -26,7 +21,7 @@ app.use(express.json());
 // }))
 
 const pgSession = connectPgSimple(session.default || session);
-
+app.set('trust proxy', 1); //Когда Express работает за Nginx, он видит запросы не напрямую от пользователя, а от Nginx. Из-за этого Express думает, что все запросы приходят из локальной сети Docker, и не может корректно определить IP-адрес клиента и протокол (HTTP/HTTPS). Для сессий это критично.
 app.use(session({
     store: new pgSession({
         pool: pool,
@@ -37,8 +32,9 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        sameSite: true,
-        secure: false
+        sameSite: 'lax', // Исправлено с true на 'lax'
+        secure: false, // Оставляем false для HTTP. Если подключишь HTTPS в Nginx, нужно будет поставить true
+        httpOnly: true //
     }
 }));
 
