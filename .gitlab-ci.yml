@@ -1,31 +1,51 @@
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - build
   - test
   - deploy
 
-build-job:       # This job runs in the build stage, which runs first.
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
+default:
+  image: docker:24.0.7
+  services:
+    - docker:24.0.7-dind
+
+build-job:
   stage: build
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+    # Собираем все образы локально для тестирования
+    - docker compose -f docker-compose.test.yml build
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+test-backend-job:
+  stage: test
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    # 1. Запускаем базу данных и ждем ее готовности
+    - docker compose -f docker-compose.test.yml up -d postgres
+    # 2. Запускаем тесты бэкенда (юнит / интеграционные API) прямо в контейнере бэкенда
+    - docker compose -f docker-compose.test.yml run --rm backend npm run test:ci
+  after_script:
+    - docker compose -f docker-compose.test.yml down
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+test-e2e-job:
+  stage: test
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+    - cp "$TEST_ENV_FILE" .env
+    # Запускаем всю инфраструктуру (NGINX + Frontend + Backend + Postgres)
+    - docker compose -f docker-compose.test.yml up -d nginx
+    # Запускаем современные E2E тесты через Playwright
+    - docker compose -f docker-compose.test.yml run --rm e2e-tests
+  after_script:
+    # Обязательно очищаем окружение после тестов
+    - docker compose -f docker-compose.test.yml down -v
+  artifacts:
+    # Сохраняем скриншоты и видео ошибок, если тесты упали
+    when: on_failure
+    paths:
+      - e2e/playwright-report/
+    expire_in: 1 week
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
+deploy-job:
+  stage: deploy
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - docker compose up -d
