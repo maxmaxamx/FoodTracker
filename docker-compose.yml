@@ -51,7 +51,7 @@ services:
       
   nginx:
     build:
-      context: .
+      context: ./nginx
       dockerfile: nginx/Dockerfile
     container_name: foodtracker-proxy
     restart: unless-stopped
