@@ -3,76 +3,39 @@ stages:
   - test
   - deploy
 
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-
-default:
-  image: docker:24.0.7
-  services:
-    - docker:24.0.7-dind
-
 build-job:
   stage: build
+  tags:
+    - shell
   script:
-    # Собираем все образы локально для тестирования
+    - cd ~/FoodTracker
     - docker compose -f docker-compose.test.yml build
 
 test-backend-job:
   stage: test
+  tags:
+    - shell
   script:
-    # 1. Запускаем базу данных и ждем ее готовности
+    - cd ~/FoodTracker
     - docker compose -f docker-compose.test.yml up -d postgres
-    # 2. Запускаем тесты бэкенда (юнит / интеграционные API) прямо в контейнере бэкенда
     - docker compose -f docker-compose.test.yml run --rm backend npm run test:ci
   after_script:
-    - docker compose -f docker-compose.test.yml down
-
-# test-e2e-job:
-#   stage: test
-#   script:
-#     - echo "File contents:"
-#     - cat "$TEST_ENV_FILE"
-#     - cp "$TEST_ENV_FILE" .env
-#     - echo "Copied .env contents:"
-#     - cat .env
-#     - docker compose -f docker-compose.test.yml up -d nginx
-#     - sleep 10
-#     - docker compose -f docker-compose.test.yml run --rm e2e-tests
-#   after_script:
-#     # Обязательно очищаем окружение после тестов
-#     - docker compose -f docker-compose.test.yml down -v
-#   artifacts:
-#     # Сохраняем скриншоты и видео ошибок, если тесты упали
-#     when: on_failure
-#     paths:
-#       - e2e/playwright-report/
-#     expire_in: 1 week
+    - cd ~/FoodTracker
+    - docker compose -f docker-compose.test.yml down -v
 
 deploy-job:
   stage: deploy
-  image: alpine:latest
-  before_script:
-    - apk add --no-cache openssh-client bash
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-    - chmod 600 ~/.ssh/id_ed25519
-    - ssh-keyscan -H 192.168.100.5 >> ~/.ssh/known_hosts 2>/dev/null
+  tags:
+    - shell
   script:
-    # 1. Копируем конфиг nginx на сервер
-    - scp -r nginx/foodtracker.conf max@192.168.100.5:/tmp/foodtracker.conf
+    # 1. Останавливаем старые контейнеры
+    - cd ~/FoodTracker && docker compose down --remove-orphans || true
     
-    # 2. Выполняем команды на сервере через SSH
-    - |
-      ssh max@192.168.100.5 "
-        # Останавливаем старые контейнеры
-        cd ~/FoodTracker && docker compose down --remove-orphans || true
-        
-        # Копируем конфиг nginx
-        sudo cp /tmp/foodtracker.conf /etc/nginx/sites-available/foodtracker
-        sudo nginx -t && sudo systemctl reload nginx
-        
-        # Запускаем новые контейнеры
-        cd ~/FoodTracker && docker compose up -d --build
-      "
+    # 2. Обновляем конфиг системного nginx и перезагружаем его
+    - sudo cp ~/FoodTracker/nginx/foodtracker.conf /etc/nginx/sites-available/foodtracker
+    - sudo nginx -t && sudo systemctl reload nginx
+    
+    # 3. Запускаем новые контейнеры
+    - cd ~/FoodTracker && docker compose up -d --build
   only:
     - main
