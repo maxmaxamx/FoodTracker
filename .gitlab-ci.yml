@@ -8,7 +8,6 @@ build-job:
   tags:
     - shell
   script:
-    - cd ~/FoodTracker
     - docker compose -f docker-compose.test.yml build
 
 test-backend-job:
@@ -16,11 +15,9 @@ test-backend-job:
   tags:
     - shell
   script:
-    - cd ~/FoodTracker
     - docker compose -f docker-compose.test.yml up -d postgres
     - docker compose -f docker-compose.test.yml run --rm backend npm run test:ci
   after_script:
-    - cd ~/FoodTracker
     - docker compose -f docker-compose.test.yml down -v
 
 deploy-job:
@@ -29,13 +26,13 @@ deploy-job:
     - shell
   script:
     # 1. Останавливаем старые контейнеры
-    - cd ~/FoodTracker && docker compose down --remove-orphans || true
+    - docker compose down --remove-orphans || true
     
-    # 2. Обновляем конфиг системного nginx и перезагружаем его
-    - sudo cp ~/FoodTracker/nginx/foodtracker.conf /etc/nginx/sites-available/foodtracker
+    # 2. Обновляем конфиг системного nginx
+    - sudo cp nginx/foodtracker.conf /etc/nginx/sites-available/foodtracker
     - sudo nginx -t && sudo systemctl reload nginx
     
     # 3. Запускаем новые контейнеры
-    - cd ~/FoodTracker && docker compose up -d --build
+    - docker compose up -d --build
   only:
     - main
