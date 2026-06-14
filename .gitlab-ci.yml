@@ -51,6 +51,14 @@ test-backend-job:
 deploy-job:
   stage: deploy
   script:
-    - docker compose up -d
+    # 1. Останавливаем старые контейнеры
+    - docker compose down || true
+    
+    # 2. Собираем и запускаем новые (backend и frontend)
+    - docker compose up -d --build
+    
+    # 3. Копируем конфиг в системный nginx и перезагружаем его
+    - sudo cp nginx/foodtracker.conf /etc/nginx/sites-available/foodtracker
+    - sudo nginx -t && sudo systemctl reload nginx
   only:
     - main

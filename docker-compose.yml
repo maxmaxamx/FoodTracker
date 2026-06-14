@@ -22,13 +22,14 @@ services:
       dockerfile: Dockerfile
     container_name: foodtracker-api
     restart: unless-stopped
+    ports:
+      - "3000:3000" 
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: 5432 
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-
       PORT: 3000
       NODE_ENV: production
       FATSECRET_CLIENT_ID: ${FATSECRET_CLIENT_ID}
@@ -45,21 +46,12 @@ services:
       dockerfile: Dockerfile
     container_name: foodtracker-web
     restart: unless-stopped
+    ports:
+      - "4200:80" 
     depends_on:
       - backend
     
       
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: foodtracker-proxy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    depends_on:
-      - frontend
-      - backend
 
 volumes:
   pgdata: # именованный том — данные БД сохранятся при пересборке
