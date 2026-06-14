@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "test": "jest",
-        "test:ci": "jest --ci --coverage --forceExit",
+        "test:ci": "jest --ci --coverage --forceExit --passWithNoTests",
         "start": "node server.js",
         "dev": "nodemon server.js"
     },

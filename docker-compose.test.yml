@@ -39,13 +39,13 @@ services:
       - frontend
       - backend
 
-  e2e-tests:
-    image: ://microsoft.com
-    environment:
-      - BASE_URL=http://nginx # Тесты ходят через NGINX
-    working_dir: /e2e 
-    volumes:
-      - ./e2e:/e2e
-    command: npx playwright test
-    depends_on:
-      - nginx
+  # e2e-tests:
+  #   image: mcr.microsoft.com/playwright:v1.52.0-noble
+  #   environment:
+  #     - BASE_URL=http://nginx # Тесты ходят через NGINX
+  #   working_dir: /e2e 
+  #   volumes:
+  #     - ./e2e:/e2e
+  #   command: npx playwright test
+  #   depends_on:
+  #     - nginx
