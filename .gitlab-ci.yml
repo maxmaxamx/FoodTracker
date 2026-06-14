@@ -56,7 +56,7 @@ deploy-job:
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
-    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null
+    - ssh-keyscan -H 192.168.100.5 >> ~/.ssh/known_hosts 2>/dev/null
   script:
     # 1. Копируем конфиг nginx на сервер
     - scp -r nginx/foodtracker.conf max@192.168.100.5:/tmp/foodtracker.conf
