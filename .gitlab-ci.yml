@@ -51,4 +51,13 @@ test-backend-job:
 deploy-job:
   stage: deploy
   script:
+        # Удаляем папку nginx.conf, если Docker создал её при прошлом ошибочном запуске
+    - rm -rf nginx.conf
+    
+    # Проверяем, что файл существует
+    - ls -la nginx.conf
+    
+    # Запускаем docker compose
     - docker compose up -d
+  only:
+    - main
