@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Устанавливаем зависимости (работает и с локфайлом, и без)
-RUN npm install --omit=dev
+RUN npm install
 
 # Копируем исходный код
 COPY . .
