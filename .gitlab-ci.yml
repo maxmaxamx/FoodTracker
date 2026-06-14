@@ -50,15 +50,29 @@ test-backend-job:
 
 deploy-job:
   stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh-client bash
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null
   script:
-    # 1. Останавливаем старые контейнеры
-    - docker compose down || true
+    # 1. Копируем конфиг nginx на сервер
+    - scp -r nginx/foodtracker.conf max@192.168.100.5:/tmp/foodtracker.conf
     
-    # 2. Собираем и запускаем новые (backend и frontend)
-    - docker compose up -d --build
-    
-    # 3. Копируем конфиг в системный nginx и перезагружаем его
-    - sudo cp nginx/foodtracker.conf /etc/nginx/sites-available/foodtracker
-    - sudo nginx -t && sudo systemctl reload nginx
+    # 2. Выполняем команды на сервере через SSH
+    - |
+      ssh max@192.168.100.5 "
+        # Останавливаем старые контейнеры
+        cd ~/FoodTracker && docker compose down --remove-orphans || true
+        
+        # Копируем конфиг nginx
+        sudo cp /tmp/foodtracker.conf /etc/nginx/sites-available/foodtracker
+        sudo nginx -t && sudo systemctl reload nginx
+        
+        # Запускаем новые контейнеры
+        cd ~/FoodTracker && docker compose up -d --build
+      "
   only:
     - main
