@@ -4,9 +4,9 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: DB_USER
-      POSTGRES_PASSWORD: DB_PASSWORD
-      POSTGRES_DB: DB_NAME
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U test_user -d foodtracker_test" ]
       interval: 5s
@@ -18,7 +18,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: DATABASE_URL
+      DATABASE_URL: ${DATABASE_URL}
       NODE_ENV: test
     depends_on:
       postgres:
@@ -43,7 +43,7 @@ services:
     image: ://microsoft.com
     environment:
       - BASE_URL=http://nginx # Тесты ходят через NGINX
-    working_dir: /e2e
+    working_dir: /e2e 
     volumes:
       - ./e2e:/e2e
     command: npx playwright test

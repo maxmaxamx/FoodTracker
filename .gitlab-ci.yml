@@ -30,10 +30,13 @@ test-backend-job:
 test-e2e-job:
   stage: test
   script:
+    - echo "File contents:"
+    - cat "$TEST_ENV_FILE"
     - cp "$TEST_ENV_FILE" .env
-    # Запускаем всю инфраструктуру (NGINX + Frontend + Backend + Postgres)
+    - echo "Copied .env contents:"
+    - cat .env
     - docker compose -f docker-compose.test.yml up -d nginx
-    # Запускаем современные E2E тесты через Playwright
+    - sleep 10
     - docker compose -f docker-compose.test.yml run --rm e2e-tests
   after_script:
     # Обязательно очищаем окружение после тестов
