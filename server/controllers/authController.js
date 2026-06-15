@@ -2,9 +2,7 @@ import { pool } from '../database.js';
 import bcrypt from 'bcrypt';
 import { getRandomNum } from '../helpers/random.js';
 import { sendEmail } from '../helpers/mailSETUP.js';
-import db from '../models/index.js';
-
-const { User } = db;
+import { User } from '../models/index.js';
 
 export async function addUser(req, res) {
     try {

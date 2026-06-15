@@ -1,11 +1,16 @@
-// models/index.js
+import sequelize from '../database.js';
 import User from './User.js';
 import Food from './Food.js';
 
-// Связи между моделями
-User.hasMany(Food, { foreignKey: 'userId' });
-Food.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Food, {
+    foreignKey: 'userId',
+    as: 'foods',
+    onDelete: 'CASCADE',
+});
 
-const db = { User, Food };
+Food.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user',
+});
 
-export default db;
+export { sequelize, User, Food };

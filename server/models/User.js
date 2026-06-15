@@ -1,43 +1,49 @@
 import { DataTypes } from 'sequelize';
+import bcrypt from 'bcrypt';
+import sequelize from '../database.js';
 
-const User = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
+const User = sequelize.define('User', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            isEmail: true,
         },
-        username: {
-            type: DataTypes.STRING,
-            allowNull: false,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}, {
+    tableName: 'users',
+    timestamps: true,
+    underscored: true,
+    hooks: {
+        beforeCreate: async (user) => {
+            if (user.password) {
+                user.password = await bcrypt.hash(user.password, 10);
+            }
         },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-            validate: {
-                isEmail: true,
-            },
+        beforeUpdate: async (user) => {
+            if (user.changed('password')) {
+                user.password = await bcrypt.hash(user.password, 10);
+            }
         },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    }, {
-        tableName: 'users',
-        timestamps: true,
-        underscored: true,
-    });
+    },
+});
 
-    User.associate = (models) => {
-        User.hasMany(models.Food, {
-            foreignKey: 'userId',
-            as: 'foods',
-            onDelete: 'CASCADE',
-        });
-    };
-
-    return User;
+User.prototype.validatePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
 };
 
 export default User;
