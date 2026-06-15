@@ -1,9 +1,7 @@
-import { DataTypes } from "sequelize";
-import Sequelize from "sequelize";
+import { DataTypes } from 'sequelize';
 
-const Food = Sequelize.define(
-    "Food",
-    {
+const Food = (sequelize, DataTypes) => {
+    const Food = sequelize.define('Food', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -12,41 +10,50 @@ const Food = Sequelize.define(
         name: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: false,
         },
         calories: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: false
         },
         proteins: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: false
         },
         fats: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: false
         },
         carbs: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: false
         },
-        userID: {
+        userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "Users",
-                key: "id",
+                model: 'users',
+                key: 'id',
             },
-            onDelete: "CASCADE"
+            onDelete: 'CASCADE',
         },
         intakeTime: {
             type: DataTypes.DATE,
-            allowNull: true
-        }
-    },
-    { timestamps: true }
-)
+            allowNull: true,
+        },
+    }, {
+        tableName: 'foods',
+        timestamps: true,
+        underscored: true,
+    });
+
+    Food.associate = (models) => {
+        Food.belongsTo(models.User, {
+            foreignKey: 'userId',
+            as: 'user',
+        });
+    };
+
+    return Food;
+};
+
+export default Food;

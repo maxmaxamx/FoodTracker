@@ -2,6 +2,9 @@ import { pool } from '../database.js';
 import bcrypt from 'bcrypt';
 import { getRandomNum } from '../helpers/random.js';
 import { sendEmail } from '../helpers/mailSETUP.js';
+import db from '../models/index.js';
+
+const { User } = db;
 
 export async function addUser(req, res) {
     try {
@@ -11,26 +14,23 @@ export async function addUser(req, res) {
             return res.status(400).json({ message: 'Email, пароль и username обязательны' });
         }
 
-        const { rows } = await pool.query(
-            "SELECT EXISTS(SELECT 1 FROM users WHERE email = $1);",
-            [email]
-        );
+        const isExist = await User.findOne({ where: { email: email } });
 
-        if (rows[0].exists) {
+        if (isExist) {
             return res.status(409).json({ message: "Такой пользователь уже существует" });
         }
 
-
         const hashedPass = await bcrypt.hash(password, 10);
 
-        const result = await pool.query(
-            "INSERT INTO users (email, username, password_hash) VALUES ($1, $2, $3) RETURNING id",
-            [email, username, hashedPass]
-        );
+        const user = await User.create({
+            username: username,
+            email: email,
+            password: password
+        })
 
         req.session.email = email;
         req.session.name = username;
-        req.session.userId = result.rows[0].id;
+        req.session.userId = user.id;
 
         await getCode(req, res);
 
@@ -48,18 +48,15 @@ export async function loginUser(req, res) {
             return res.status(400).json({ error: 'Email и пароль обязательны' });
         }
 
-        const { rows } = await pool.query(
-            "SELECT * FROM users WHERE email = $1 LIMIT 1;",
-            [email]
-        );
+        const isExist = await User.findOne({ where: { email: email } });
 
-        if (rows.length === 0) {
+        if (!isExist) {
             return res.status(401).json({ message: "Пользователь не найден" });
         }
 
-        const user = rows[0];
+        const user = isExist;
 
-        const isMatch = await bcrypt.compare(password, user.password_hash);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ message: 'Неверный пароль' });

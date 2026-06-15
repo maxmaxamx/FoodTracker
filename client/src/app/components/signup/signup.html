@@ -10,7 +10,7 @@
                     <label class="form-label" for="email">Электронная почта</label>
                     <div class="input-wrapper">
                         <span class="input-icon">📧</span>
-                        <input type="email" id="email" class="form-input" placeholder="example@mail.com" required
+                        <input type="email" name="email" id="email" class="form-input" placeholder="example@mail.com" required
                             [(ngModel)]="log.email" />
                     </div>
                 </div>
@@ -19,7 +19,7 @@
                     <label class="form-label" for="email">Имя</label>
                     <div class="input-wrapper">
                         <span class="input-icon">📛</span>
-                        <input type="email" id="email" class="form-input" placeholder="Иван" required
+                        <input type="text" name="username" class="form-input" placeholder="Иван" required
                             [(ngModel)]="log.username" />
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <label class="form-label" for="password">Пароль</label>
                     <div class="input-wrapper">
                         <span class="input-icon">🔒</span>
-                        <input [type]="passType" id="password" class="form-input" placeholder="Введите пароль" required
+                        <input [type]="passType" name="password" id="password" class="form-input" placeholder="Введите пароль" required
                             [(ngModel)]="log.password" />
                         <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
                             <span class="eye-icon" id="eyeIcon">{{passIcon}}</span>
