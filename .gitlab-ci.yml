@@ -25,62 +25,89 @@ deploy-job:
   tags:
     - shell
   script:
-    # 1. Полная очистка старых контейнеров и сетей
+    # 1. Полная очистка старых контейнеров проекта
     - echo "=== Stopping old containers ==="
-    - docker compose down --remove-orphans --volumes || true
     - docker compose down --remove-orphans || true
     
-    # 2. Убиваем зависшие контейнеры, которые могут держать порты
-    - echo "=== Killing containers on ports 3000 and 4200 ==="
+    # 2. Находим и убиваем ВСЁ, что занимает порты 3000 и 4200
+    - echo "=== Killing processes on ports 3000 and 4200 ==="
     - |
       for port in 3000 4200; do
-        container_id=$(docker ps --filter "publish=$port" -q)
+        echo "Checking port $port..."
+        # Находим PID процесса, занимающего порт
+        pid=$(sudo lsof -t -i:$port 2>/dev/null || true)
+        if [ -n "$pid" ]; then
+          echo "Killing process $pid on port $port"
+          sudo kill -9 $pid || true
+        else
+          echo "Port $port is free"
+        fi
+      done
+    
+    # 3. Дополнительная проверка Docker-контейнеров
+    - echo "=== Stopping any Docker containers on these ports ==="
+    - |
+      for port in 3000 4200; do
+        container_id=$(docker ps -q --filter "publish=$port" 2>/dev/null || true)
         if [ -n "$container_id" ]; then
-          echo "Stopping container $container_id on port $port"
+          echo "Stopping Docker container $container_id on port $port"
           docker stop $container_id || true
           docker rm $container_id || true
         fi
       done
     
-    # 3. Ждем освобождения портов
-    - sleep 3
+    # 4. Ждем освобождения портов
+    - echo "=== Waiting for ports to be released ==="
+    - sleep 5
     
-    # 4. Обновляем конфиг Nginx
+    # 5. Проверяем, что порты действительно свободны
+    - echo "=== Verifying ports are free ==="
+    - |
+      for port in 3000 4200; do
+        if sudo lsof -i:$port >/dev/null 2>&1; then
+          echo "ERROR: Port $port is still in use!"
+          sudo lsof -i:$port
+          exit 1
+        fi
+        echo "Port $port is free ✓"
+      done
+    
+    # 6. Обновляем конфиг Nginx
     - echo "=== Updating Nginx configuration ==="
     - sudo cp nginx/foodtracker.conf /etc/nginx/sites-available/foodtracker
     - sudo ln -sf /etc/nginx/sites-available/foodtracker /etc/nginx/sites-enabled/foodtracker
     - sudo nginx -t
     - sudo systemctl reload nginx
     
-    # 5. Собираем и запускаем новые контейнеры
+    # 7. Собираем и запускаем новые контейнеры
     - echo "=== Building and starting containers ==="
     - docker compose up -d --build
     
-    # 6. Ждем запуска и проверяем здоровье
+    # 8. Ждем запуска и проверяем здоровье
     - echo "=== Waiting for containers to start ==="
     - sleep 15
     
-    # 7. Проверяем статус контейнеров
+    # 9. Проверяем статус контейнеров
     - echo "=== Container status ==="
     - docker compose ps
     
-    # 8. Проверяем, что все контейнеры запущены
+    # 10. Проверяем, что все контейнеры запущены
     - |
       if ! docker compose ps | grep -q "foodtracker-api"; then
         echo "ERROR: foodtracker-api is not running!"
-        docker compose logs api
+        docker compose logs backend
         exit 1
       fi
       if ! docker compose ps | grep -q "foodtracker-web"; then
         echo "ERROR: foodtracker-web is not running!"
-        docker compose logs web
+        docker compose logs frontend
         exit 1
       fi
     
-    # 9. Проверяем доступность сервисов
+    # 11. Проверяем доступность сервисов
     - echo "=== Checking service availability ==="
-    - curl -f http://localhost:3000 || (echo "Backend not accessible" && docker compose logs api && exit 1)
-    - curl -f http://localhost:4200 || (echo "Frontend not accessible" && docker compose logs web && exit 1)
+    - curl -f http://localhost:3000 || (echo "Backend not accessible" && docker compose logs backend && exit 1)
+    - curl -f http://localhost:4200 || (echo "Frontend not accessible" && docker compose logs frontend && exit 1)
     
     - echo "=== Deployment completed successfully! ==="
   only:
