@@ -9,6 +9,7 @@
     z-index: 1000;
 }
 
+
 .top-bar {
     display: flex;
     align-items: center;
@@ -17,7 +18,7 @@
 
 .logo a {
     font-weight: bold;
-    font-size: 40px;
+    font-size: 35px;
     color: #1a1a1a;
     text-decoration: none;
 }
@@ -52,9 +53,9 @@
 }
 
 .cta {
-    background: var(--primary-green);
+    background: var(--accent-red);
     border: none;
-    padding: 1.14vw 1.45vw;
+    padding: 1.14vw 3vw;
     border-radius: 50px;
     color: white;
     cursor: pointer;
@@ -65,12 +66,15 @@
         transform 0.3s cubic-bezier(0.02, 0.09, 0.15, 1.54),
         box-shadow 0.3s ease,
         background-color 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cta:hover {
     transform: translateY(-4px) scale(1.04);
-    box-shadow: 0 10px 25px rgba(43, 220, 140, 0.45);
-    background-color: #24c07a;
+    box-shadow: 0 10px 25px var(--warning-red);
+    background-color: var(--danger-red);
 }
 
 .cta:active {
@@ -466,7 +470,7 @@
 
     .nav {
         display: flex;
-        align-items:center;
+        align-items: center;
         justify-content: space-around;
         flex-direction: row;
         gap: 0.6rem;
