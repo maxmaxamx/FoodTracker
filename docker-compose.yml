@@ -38,7 +38,7 @@ services:
       GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD}
     depends_on:
       postgres:
-        condition: service_healthy # ждём, пока БД не станет готова
+        condition: service_healthy
 
   frontend:
     build:
@@ -47,11 +47,11 @@ services:
     container_name: foodtracker-web
     restart: unless-stopped
     ports:
-      - "80:80" 
+      - "4200:80" 
     depends_on:
       - backend
     
       
 
 volumes:
-  pgdata: # именованный том — данные БД сохранятся при пересборке
+  pgdata:
