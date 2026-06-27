@@ -3,13 +3,20 @@
 <div class="container">
     <div class="content">
 
+        <!-- === ПОИСК === -->
         <div class="input-wrapper">
             <span class="input-icon">🥗</span>
-            <input type="text" [(ngModel)]="query" class="form-input" placeholder="Введите название блюда/продукта"
-                (keyup.enter)="search()" />
+            <input
+                type="text"
+                [(ngModel)]="query"
+                class="form-input"
+                placeholder="Введите название блюда/продукта"
+                (keyup.enter)="search()"
+            />
             <button (click)="search()" class="cta">Поиск</button>
         </div>
 
+        <!-- === ТАБЛИЦА РЕЗУЛЬТАТОВ === -->
         <div class="table-container">
             <table class="food-table">
                 <thead>
@@ -19,68 +26,111 @@
                         <th>Жиры</th>
                         <th>Углеводы</th>
                         <th>Калории</th>
-                        <th>Вес г</th>
+                        <th>Вес, г</th>
                         <th>Добавить</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (food of foods; track food.id) {
-                    <tr style="cursor: pointer;">
-                        <td>{{ food.name }}</td>
-                        <td>{{ food.protein ?? '—' }}</td>
-                        <td>{{ food.fat ?? '—' }}</td>
-                        <td>{{ food.carbs ?? '—' }}</td>
-                        <td>{{ food.calories ?? '—' }}</td>
-                        <td (dblclick)="startEdit(food)">
-                            @if (editingRowId === food.id) {
-                            <input class="edit-input" type="number" [(ngModel)]="draftValue" (blur)="saveEdit()"
-                                (keyup.enter)="saveEdit()" (keyup.escape)="cancelEdit()" #editInput autofocus>
-                            } @else {
-                            {{ draftValue ?? 100 }}
-                            }
-                        </td>
-                        <td><button class="delete-btn" (click)="applyAdding(food)"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4zm-6 4q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zM5 5v14z" />
-                                </svg></button></td>
+                        <tr>
+                            <!-- Название -->
+                            <td data-label="Название">{{ food.name }}</td>
 
-                    </tr>
+                            <!-- Белки -->
+                            <td data-label="Белки">{{ food.protein ?? '—' }}</td>
+
+                            <!-- Жиры -->
+                            <td data-label="Жиры">{{ food.fat ?? '—' }}</td>
+
+                            <!-- Углеводы -->
+                            <td data-label="Углеводы">{{ food.carbs ?? '—' }}</td>
+
+                            <!-- Калории -->
+                            <td data-label="Калории">{{ food.calories ?? '—' }}</td>
+
+                            <!-- Вес (редактируемый) -->
+                            <td data-label="Вес, г" (dblclick)="startEdit(food)">
+                                @if (editingRowId === food.id) {
+                                    <input
+                                        class="edit-input"
+                                        type="number"
+                                        [(ngModel)]="draftValue"
+                                        (blur)="saveEdit()"
+                                        (keyup.enter)="saveEdit()"
+                                        (keyup.escape)="cancelEdit()"
+                                        #editInput
+                                        autofocus
+                                    />
+                                } @else {
+                                    <span class="weight-value" title="Двойной клик для редактирования">
+                                        {{ draftValue ?? 100 }}
+                                    </span>
+                                }
+                            </td>
+
+                            <!-- Кнопка "Добавить" -->
+                            <td data-label="Добавить" class="add-td">
+                                <button
+                                    class="delete-btn"
+                                    (click)="applyAdding(food)"
+                                    title="Добавить продукт"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="24" height="24"
+                                         viewBox="0 0 24 24">
+                                        <path fill="currentColor"
+                                              d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4zm-6 4q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21z"/>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
-            @if(isLoading){
-            <div class="loader">
-                <div class="circle">
-                    <div class="dot"></div>
-                    <div class="outline"></div>
+
+            <!-- === ЗАГРУЗКА === -->
+            @if (isLoading) {
+                <div class="loader">
+                    <div class="circle">
+                        <div class="dot"></div>
+                        <div class="outline"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="dot"></div>
+                        <div class="outline"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="dot"></div>
+                        <div class="outline"></div>
+                    </div>
+                    <div class="circle">
+                        <div class="dot"></div>
+                        <div class="outline"></div>
+                    </div>
                 </div>
-                <div class="circle">
-                    <div class="dot"></div>
-                    <div class="outline"></div>
-                </div>
-                <div class="circle">
-                    <div class="dot"></div>
-                    <div class="outline"></div>
-                </div>
-                <div class="circle">
-                    <div class="dot"></div>
-                    <div class="outline"></div>
-                </div>
-            </div>
             }
 
+            <!-- === НЕ НАЙДЕНО === -->
             @if (notfound) {
-            <tr>
-                <td colspan="5" style="text-align: center;">Ничего не найдено</td>
-            </tr>
+                <div class="not-found">
+                    <span class="not-found-icon">🔍</span>
+                    <span>Ничего не найдено</span>
+                </div>
             }
         </div>
 
+        <!-- === КНОПКИ ДЕЙСТВИЙ === -->
         <div class="buttons-container">
-            <button class="btn btn-add-photo" [routerLink]="['/ai']" routerLinkActive="router-link-active">Добавить по
-                фото</button>
-            <button class="btn btn-home" routerLink="/authorized">Подтвердить</button>
+            <button
+                class="btn btn-add-photo"
+                [routerLink]="['/ai']"
+                routerLinkActive="router-link-active"
+            >
+                Добавить по фото
+            </button>
+            <button class="btn btn-home" routerLink="/authorized">
+                Подтвердить
+            </button>
         </div>
 
     </div>

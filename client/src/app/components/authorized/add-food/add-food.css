@@ -148,6 +148,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+    margin: 0 auto;
 }
 
 .delete-btn:hover {
@@ -485,6 +486,7 @@
     color: white;
 }
 
+/* === ПЛАНШЕТЫ (≤ 768px) === */
 @media (max-width: 768px) {
     .container {
         padding-top: 4rem;
@@ -497,39 +499,178 @@
         max-width: 100%;
     }
 
-    .search-container,
-    .table-container,
-    .buttons-container {
-        padding-left: 0.8rem;
-        padding-right: 0.8rem;
+    /* === ТАБЛИЦА ПРЕВРАЩАЕТСЯ В КАРТОЧКИ === */
+    .table-container {
+        border: none;
+        background: transparent;
+        border-radius: 0;
+        margin-bottom: 1rem;
+        overflow-x: visible;
     }
 
-    .food-table thead th,
-    .food-table tbody td {
-        font-size: 0.9rem;
-        padding: 10px 8px;
+    .food-table,
+    .food-table thead,
+    .food-table tbody,
+    .food-table th,
+    .food-table td,
+    .food-table tr {
+        display: block;
     }
 
-    .btn {
+    /* Скрываем заголовок таблицы */
+    .food-table thead {
+        display: none;
+    }
+
+    /* Каждая строка — карточка */
+    .food-table tbody tr {
+        background: rgba(240, 255, 250, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        margin-bottom: 12px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .food-table tbody tr:hover {
+        background: rgba(240, 253, 244, 0.95);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Ячейки — в две колонки */
+    .food-table tbody tr td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        text-align: right;
         font-size: 0.95rem;
-        padding: 12px 14px;
+        white-space: normal;
     }
 
-    .header,
-    .search-bar {
+    .food-table tbody tr td:last-child {
+        border-bottom: none;
+    }
+
+    /* Название — на всю ширину сверху */
+    .food-table tbody tr td:first-child {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        padding-bottom: 12px;
+        margin-bottom: 4px;
+        border-bottom: 2px solid rgba(43, 220, 140, 0.2);
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Подпись колонки через data-label */
+    .food-table tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-right: 12px;
+        text-align: left;
+    }
+
+    /* Название без подписи (она уже в самом блоке) */
+    .food-table tbody tr td:first-child::before {
+        display: none;
+    }
+
+    /* Кнопка "Добавить" — на всю ширину */
+    .food-table tbody tr td:last-child {
+        padding-top: 12px;
+        margin-top: 4px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        border-bottom: none;
+        justify-content: flex-end;
+    }
+
+    .food-table tbody tr td:last-child::before {
+        display: none;
+    }
+
+    .delete-btn {
         width: 100%;
+        max-width: 200px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+        justify-content: center;
     }
 
+    .delete-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Инпут редактирования */
+    .edit-input {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        max-width: 120px;
+    }
+
+    /* === ИНПУТ ПОИСКА === */
     .input-wrapper {
-        height: 9vw;
-        border-radius: 2vw;
+        height: 52px;
+        border-radius: 14px;
+        padding: 0 12px;
+        margin-bottom: 16px;
+    }
+
+    .input-icon {
+        font-size: 1.3rem;
+        margin-right: 10px;
     }
 
     .form-input {
-        font-size: 3vw;
+        font-size: 1rem;
+    }
+
+    .cta {
+        height: 40px;
+        font-size: 0.95rem;
+        padding: 0 16px;
+        border-radius: 10px;
+    }
+
+    /* === КНОПКИ === */
+    .buttons-container {
+        padding: 0;
+        gap: 10px;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 14px 16px;
+        border-radius: 12px;
+    }
+
+    /* Сообщение "не найдено" */
+    .not-found {
+        text-align: center;
+        padding: 32px 16px;
+        color: #64748b;
+        font-size: 1rem;
+        background: rgba(240, 255, 250, 0.9);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
     }
 }
 
+/* === ТЕЛЕФОНЫ (≤ 480px) === */
 @media (max-width: 480px) {
     .container {
         padding-top: 3.5rem;
@@ -538,41 +679,55 @@
 
     .content {
         width: 100%;
-        padding: 1rem 0.75rem;
-        max-width: 100%;
+        padding: 1rem 12px;
     }
 
-    .search-container,
-    .table-container,
-    .buttons-container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
+    .food-table tbody tr {
+        padding: 14px;
+        margin-bottom: 10px;
     }
 
-    .food-table thead th,
-    .food-table tbody td {
-        font-size: 0.85rem;
-        padding: 10px 6px;
+    .food-table tbody tr td {
+        font-size: 0.9rem;
+        padding: 7px 0;
+    }
+
+    .food-table tbody tr td:first-child {
+        font-size: 1rem;
+    }
+
+    .food-table tbody tr td::before {
+        font-size: 0.8rem;
+    }
+
+    .delete-btn {
+        font-size: 0.9rem;
+        padding: 8px 14px;
+    }
+
+    .input-wrapper {
+        height: 48px;
+    }
+
+    .form-input {
+        font-size: 0.95rem;
+    }
+
+    .cta {
+        height: 38px;
+        font-size: 0.9rem;
+        padding: 0 14px;
     }
 
     .btn {
         font-size: 0.95rem;
-        padding: 12px 12px;
+        padding: 12px 14px;
     }
+}
 
-    .buttons-container {
-        gap: 0.8rem;
-    }
 
-    .messageBox {
-        min-width: 0;
-    }
-
-    .input-wrapper {
-        height: 11vw;
-    }
-
-    .form-input {
-        font-size: 3.5vw;
-    }
+.add-td{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
