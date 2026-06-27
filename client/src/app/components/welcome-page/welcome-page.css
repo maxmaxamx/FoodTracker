@@ -1,50 +1,3 @@
-.hero {
-    background-color: var(--primary-green);
-    width: 100%;
-    max-width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 8vw;
-    padding-bottom: 6vw;
-}
-
-.hero .mainH {
-    color: white;
-    font-size: 5vw;
-    text-align: center;
-    margin-bottom: 3vw;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.hero .content {
-    width: min(100%, 1400px);
-    max-width: 100%;
-    min-height: 50vw;
-    background-color: var(--primary);
-    border-radius: 2vw;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-    padding: 4vw 5vw;
-    display: flex;
-    flex-direction: column;
-    gap: 4vw;
-}
-
-.section-title {
-    font-size: 2.2vw;
-    font-weight: 700;
-    line-height: 1.3;
-}
-
-.wavy-divider {
-    width: 100%;
-    height: 4vw;
-    position: relative;
-    margin: 1vw 0 2vw 0;
-}
-
 .wavy-divider svg {
     width: 100%;
     height: 100%;
@@ -232,6 +185,10 @@
     .pro-text {
         font-size: 3vw;
     }
+
+    .mainH{
+        font-size: 1.75rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -275,4 +232,14 @@
     .pro-text {
         font-size: 3.5vw;
     }
+
+    .mainH {
+        font-size: 1.2rem !important;
+    }
+}
+
+
+.mainH {
+    text-align: center;
+    font-size: 2.5rem;
 }
