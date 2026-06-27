@@ -6,8 +6,6 @@ import * as foodController from "../controllers/foodController.js";
 
 const router = express.Router();
 
-router.get('/', res.status(200).message("Backend is running"));
-
 router.get('/fatsecret/search', fatsecretController.searchFood);
 
 router.post('/foodBot/recognize', aiController.recognizeFood)
