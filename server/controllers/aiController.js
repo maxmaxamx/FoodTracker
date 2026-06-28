@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { Groq } from 'groq-sdk';
 import dotenv from 'dotenv';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -11,21 +11,15 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const invokeUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
-const stream = false;
-
-const headers = {
-    "Authorization": "Bearer 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",
-    "Accept": stream ? "text/event-stream" : "application/json",
-    "Content-Type": "application/json"
-};
-
+// Инициализируем клиент Groq. Ключ берётся из переменной окружения GROQ_API_KEY
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY,
+});
 
 async function imageToDataUrl(filePath) {
     const buffer = await readFile(filePath);
     const ext = path.extname(filePath).toLowerCase().replace('.', '');
 
-    // Определяем MIME-тип
     const mimeTypes = {
         'jpg': 'image/jpeg',
         'jpeg': 'image/jpeg',
@@ -39,6 +33,7 @@ async function imageToDataUrl(filePath) {
 
     return `data:${mimeType};base64,${base64}`;
 }
+
 
 
 async function makeRequest(filePath) {
@@ -66,36 +61,35 @@ Example valid response:
 {"Name":"Салат с курицей гриль","Calories":250,"Fats":8,"Carbs":15,"Proteins":30}
 `;
 
-        let content = []
+        let content;
         if (filePath) {
             const imgURL = await imageToDataUrl(filePath);
-            content.push({ type: "text", text: textPrompt });
-            content.push({ type: "image_url", image_url: { url: imgURL } })
+            content = [
+                { type: "text", text: textPrompt },
+                { type: "image_url", image_url: { url: imgURL } }
+            ];
         } else {
             content = textPrompt;
         }
 
-        const payload = {
-            "model": "meta/llama-4-maverick-17b-128e-instruct",
-            "messages": [{ "role": "user", content }],
-            "max_tokens": 100,
-            "temperature": 0.01,
-            "top_p": 0.1,
-            "frequency_penalty": 0.00,
-            "presence_penalty": 0.00,
-            "stream": false
-        };
+        const chatCompletion = await groq.chat.completions.create({
+            model: "meta-llama/llama-4-scout-17b-16e-instruct",
+            messages: [{ role: "user", content }],
+            temperature: 0.01,
+            max_completion_tokens: 1024,
+            top_p: 0.1,
+            stream: false,
+        });
 
-        const response = await axios.post(invokeUrl, payload, { headers });
-        console.log(response.data.choices[0].message.content);
+        const result = chatCompletion.choices[0]?.message?.content || "";
+        console.log(result);
+        return result;
 
-        return response.data.choices[0].message.content;
     } catch (error) {
-        console.error("Ошибка:", error.response?.data || error.message);
+        console.error("Ошибка Groq:", error?.error || error.message);
         throw error;
     }
 }
-
 export async function recognizeFood(req, res) {
     const form = new IncomingForm({
         uploadDir: path.join(__dirname, '../media'),
