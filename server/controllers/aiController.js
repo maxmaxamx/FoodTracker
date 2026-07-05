@@ -6,12 +6,6 @@ import path from 'node:path';
 import { IncomingForm } from 'formidable';
 import fs from 'node:fs/promises';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
-// Инициализируем клиент Groq. Ключ берётся из переменной окружения GROQ_API_KEY
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });

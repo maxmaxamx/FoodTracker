@@ -20,6 +20,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    env_file:
+      - .env  
     container_name: foodtracker-api
     restart: unless-stopped
     ports:
@@ -47,7 +49,7 @@ services:
     container_name: foodtracker-web
     restart: unless-stopped
     ports:
-      - "4200:80" 
+      - "80:80" 
     depends_on:
       - backend
     
