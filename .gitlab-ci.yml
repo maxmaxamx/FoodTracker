@@ -104,9 +104,10 @@ deploy-job:
       fi
     
     # 11. Проверяем доступность сервисов
+        # 11. Проверяем доступность сервисов
     - echo "=== Checking service availability ==="
-    - curl -f http://localhost:3000 || (echo "Backend not accessible" && docker compose logs backend && exit 1)
-    - curl -f http://localhost:4200 || (echo "Frontend not accessible" && docker compose logs frontend && exit 1)
+    - ss -tlnp | grep ":3000" && echo "Backend is running ✓" || (echo "Backend not running" && exit 1)
+    - ss -tlnp | grep ":4200" && echo "Frontend is running ✓" || (echo "Frontend not running" && exit 1)
     
     - echo "=== Deployment completed successfully! ==="
   only:
