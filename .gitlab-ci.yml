@@ -34,5 +34,5 @@ deploy-job:
     
     # 3. Запускаем новые контейнеры
     - docker compose up -d --build
-  only:
+only:
     - main
