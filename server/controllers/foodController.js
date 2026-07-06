@@ -1,5 +1,7 @@
 import session from "express-session";
 import { pool } from "../database.js";
+import { Food } from "../models/index.js";
+import { Op } from "sequelize";
 
 export async function pushFood(req, res) {
     try {
@@ -14,13 +16,18 @@ export async function pushFood(req, res) {
         } = req.body;
 
 
-        const result = await pool.query(
-            `INSERT INTO food (name, carbs, fats, proteins, calories, connect_id, food_intake, date_added) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING id
-            `,
-            [Name, Carbs, Fats, Proteins, Calories, req.session.userId, Intake, date]
-        )
+
+        const result = await Food.create({
+            userId: req.session.userId,
+            name: Name,
+            calories: Calories,
+            proteins: Proteins,
+            fats: Fats,
+            carbs: Carbs,
+            intakeTime: Intake
+        })
+
+
 
         return res.status(201).json({ id: result.rows[0].id });
     } catch (error) {
@@ -34,27 +41,33 @@ export async function getFood(req, res) {
     }
 
     if (!req.query.date) {
-        return res.status(401).json({ message: "Нету даты" });
+        return res.status(400).json({ message: "Нету даты" });
     }
 
     try {
-        const { rows } = await pool.query(
-            `SELECT * FROM food WHERE connect_id=$1 AND date_added::date=$2::date
-            `, [req.session.userId, req.query.date])
+        const foods = await Food.findAll({
+            where: {
+                userId: req.session.userId,
+                intakeTime: {
+                    [Op.like]: `${req.query.date}%`
+                }
+            },
+            order: [['intakeTime', 'ASC']]
+        });
 
-        const foodArr = rows.map(r => ({
+        const foodArr = foods.map(r => ({
             Id: r.id,
             Name: r.name,
             Calories: Number(r.calories),
             Fats: Number(r.fats),
             Carbs: Number(r.carbs),
             Proteins: Number(r.proteins),
-            Intake: r.food_intake
+            Intake: r.intakeTime
         }));
 
         return res.status(200).json(foodArr);
     } catch (error) {
-        return res.status(500).json({ message: "Ошибка в получении еды" + error.message })
+        return res.status(500).json({ message: "Ошибка в получении еды: " + error.message });
     }
 }
 
@@ -64,22 +77,36 @@ export async function deleteFood(req, res) {
     }
 
     try {
-        const { rows } = await pool.query(
-            `DELETE FROM food WHERE ID = $1
-            `, [req.params.id])
+        const foodId = parseInt(req.params.id);
+        
+        if (isNaN(foodId)) {
+            return res.status(400).json({ message: "Некорректный ID" });
+        }
 
-        const foodArr = rows.map(r => ({
-            Id: r.id,
-            Name: r.name,
-            Calories: Number(r.calories),
-            Fats: Number(r.fats),
-            Carbs: Number(r.carbs),
-            Proteins: Number(r.proteins),
-            Intake: r.food_intake
-        }));
+        const food = await Food.findOne({
+            where: {
+                id: foodId,
+                userId: req.session.userId
+            }
+        });
 
-        return res.status(200).json('Успешно удалено');
+        if (!food) {
+            return res.status(404).json({ message: "Запись не найдена" });
+        }
+
+        const deletedCount = await Food.destroy({
+            where: {
+                id: foodId,
+                userId: req.session.userId
+            }
+        });
+
+        if (deletedCount === 0) {
+            return res.status(500).json({ message: "Не удалось удалить запись" });
+        }
+
+        return res.status(200).json({ message: "Успешно удалено" });
     } catch (error) {
-        return res.status(500).json({ message: "Ошибка в получении еды" + error.message })
+        return res.status(500).json({ message: "Ошибка при удалении еды: " + error.message });
     }
 }
