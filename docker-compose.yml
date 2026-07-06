@@ -49,11 +49,9 @@ services:
     container_name: foodtracker-web
     restart: unless-stopped
     ports:
-      - "80:80" 
+      - "4200:80" 
     depends_on:
       - backend
-    
-      
 
 volumes:
   pgdata:

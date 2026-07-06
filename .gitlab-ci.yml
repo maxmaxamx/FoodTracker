@@ -34,7 +34,6 @@ deploy-job:
     - |
       for port in 3000 4200; do
         echo "Checking port $port..."
-        # Находим PID процесса, занимающего порт
         pid=$(sudo lsof -t -i:$port 2>/dev/null || true)
         if [ -n "$pid" ]; then
           echo "Killing process $pid on port $port"
