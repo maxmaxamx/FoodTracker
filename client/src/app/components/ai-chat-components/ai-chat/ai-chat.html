@@ -41,8 +41,7 @@
                         </button>
                     </div>
                     }
-                    <input type="file" id="file" name="photo" (change)="onFileSelected($event)" multiple="false"
-                        hidden />
+                    <input #fileInput id="file" type="file" (change)="onFileSelected($event)" />
                 </div>
 
                 <button id="sendButton" (click)="sendFile()">

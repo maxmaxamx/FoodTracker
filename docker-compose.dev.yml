@@ -9,8 +9,8 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "5433:5432"
-    volumes:
-      - pgdata_dev:/var/lib/postgresql/data
+    # volumes:
+    #   - pgdata_dev:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d foodtracker"]
       interval: 5s
@@ -25,6 +25,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -38,9 +40,10 @@ services:
       GMAIL_USER: ${GMAIL_USER}
       GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD}
       SESSION_SECRET: ${SESSION_SECRET}
+      GROQ_API_KEY: ${GROQ_API_KEY}
     volumes:
       - ./server:/app
-      - /app/node_modules 
+      - /app/node_modules
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,25 +55,13 @@ services:
     container_name: foodtracker-web-dev
     restart: unless-stopped
     ports:
-      - "4200:4200" 
+      - "4200:4200"
     volumes:
       - ./client:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
-      - backend
-
-  nginx:
-    image: nginx:alpine
-    container_name: foodtracker-proxy-dev
-    restart: unless-stopped
-    ports:
-      - "80:80"   
-    volumes:
-      - ./nginx/dev.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - frontend
       - backend
 
 volumes:

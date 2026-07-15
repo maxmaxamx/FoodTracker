@@ -43,7 +43,6 @@ app.use("/api", smartRouter);
 
 const startServer = async () => {
     try {
-        // Создаём таблицу для сессий
         await pool.query(`
             CREATE TABLE IF NOT EXISTS session (
                 sid VARCHAR NOT NULL COLLATE "default",
@@ -55,7 +54,6 @@ const startServer = async () => {
         `);
         console.log('✅ Session table ready');
 
-        // Синхронизируем модели с БД
         if (process.env.NODE_ENV === 'development') {
             await sequelize.sync({ alter: true });
         } else {
@@ -63,7 +61,6 @@ const startServer = async () => {
         }
         console.log('✅ Database synchronized');
 
-        // Запускаем сервер (только один раз!)
         const port = process.env.PORT || 3000;
         app.listen(port, () => {
             console.log(`🚀 Server running on port ${port}`);

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, viewChild, ElementRef, DestroyRef } from '@angular/core';
 import { AuthHead } from "../../authorized/auth-head/auth-head";
 import { Artificial } from '../../../services/artificial';
 import { Message } from "../message/message";
@@ -12,15 +12,15 @@ import { FoodExample, messageTemplate } from '../../../utils/identifiers';
 })
 export class AiChat {
   private cdr = inject(ChangeDetectorRef);
-  protected time: Date = new Date();
+  private destroyRef = inject(DestroyRef);
+  private aiService = inject(Artificial);
+
+  private fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
+
   protected selectedFile: File | null = null;
   protected previewUrl: string | null = null;
-  protected aiService = inject(Artificial);
-  isLoading: boolean = true;
-  aiResponse: string = '';
-
-  currentTime: string = `${this.time.getHours()} : ${this.time.getMinutes()}`;
-  senderPerson: boolean = true;
+  protected isLoading = false;
+  protected aiResponse = '';
 
   private _chatHistory: messageTemplate[] = [];
 
@@ -32,6 +32,12 @@ export class AiChat {
     return this.selectedFile?.type.startsWith('image/') ?? false;
   }
 
+  private _getCurrentTime(): string {
+    const now = new Date();
+    const h = now.getHours().toString().padStart(2, '0');
+    const m = now.getMinutes().toString().padStart(2, '0');
+    return `${h}:${m}`;
+  }
 
   private _parseFoodData(data: string): FoodExample {
     const fallback: FoodExample = {
@@ -46,10 +52,7 @@ export class AiChat {
 
     try {
       const parsed = JSON.parse(data);
-
-      if (typeof parsed !== 'object' || parsed === null) {
-        return fallback;
-      }
+      if (typeof parsed !== 'object' || parsed === null) return fallback;
 
       const hasValidFields =
         typeof parsed.Name === 'string' &&
@@ -64,23 +67,21 @@ export class AiChat {
     }
   }
 
-
-
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
-    if (file) {
-      this.selectedFile = file;
+    if (!file) return;
 
-      if (this.isImage) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.previewUrl = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+    this.selectedFile = file;
 
-      }
+    if (this.isImage) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewUrl = e.target?.result as string;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
     }
 
     this.cdr.detectChanges();
@@ -89,34 +90,39 @@ export class AiChat {
   removeFile() {
     this.selectedFile = null;
     this.previewUrl = null;
-    const input = document.getElementById('file') as HTMLInputElement;
-    if (input) input.value = '';
+    const inputRef = this.fileInput();
+    if (inputRef) inputRef.nativeElement.value = '';
   }
 
   sendFile() {
-    if (!this.selectedFile) return
+    if (!this.selectedFile) return;
+
     this.isLoading = true;
+    const currentTime = this._getCurrentTime();
+
     this._chatHistory.push({
       isAI: false,
       text: 'фотография еды',
-      time: this.currentTime
-    })
-
-    this.aiService.sendFood(this.selectedFile).subscribe({
-      next: (data: string) => {
-        this._chatHistory.push({
-          isAI: true,
-          data: this._parseFoodData(data),
-          time: this.currentTime
-        })
-        this.removeFile();
-        this.cdr.detectChanges();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Ошибка при отправке:', err);
-        this.cdr.detectChanges();
-      }
+      time: currentTime
     });
+
+    this.aiService.sendFood(this.selectedFile)
+      .subscribe({
+        next: (data: string) => {
+          this._chatHistory.push({
+            isAI: true,
+            data: this._parseFoodData(data),
+            time: this._getCurrentTime()
+          });
+          this.removeFile();
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Ошибка при отправке:', err);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 }

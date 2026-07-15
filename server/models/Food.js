@@ -39,6 +39,7 @@ const Food = sequelize.define('Food', {
     intakeTime: {
         type: DataTypes.DATE,
         allowNull: true,
+        defaultValue: DataTypes.NOW, 
     },
 }, {
     tableName: 'foods',
