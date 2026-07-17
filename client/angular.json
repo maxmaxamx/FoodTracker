@@ -61,7 +61,8 @@
             "host": "0.0.0.0",
             "port": 4200,
             "poll": 2000,
-            "allowedHosts": ["all"]
+            "allowedHosts": ["all"],
+            "browserTarget": "foodTracker:build"
           },
           "configurations": {
             "production": {

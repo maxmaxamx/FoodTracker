@@ -1,31 +1,31 @@
-import { Groq } from 'groq-sdk';
+import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import { readFile, unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, extname } from 'node:path';
 import { IncomingForm } from 'formidable';
 
-// 1. Инициализация переменных окружения
 dotenv.config();
 
-// 2. Корректный __dirname для ES-модулей
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// 3. Инициализация клиента Groq
-const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY,
+const openai = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPENROUTER_API_KEY,
+    defaultHeaders: {
+        "HTTP-Referer": "http://localhost:3000",
+        "X-Title": "Food Tracker App",
+    },
 });
 
 async function imageToDataUrl(filePath) {
     const buffer = await readFile(filePath);
     const ext = extname(filePath).toLowerCase().replace('.', '');
-    
     const mimeTypes = {
         jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
         webp: 'image/webp', gif: 'image/gif'
     };
-
     const mimeType = mimeTypes[ext] || 'image/jpeg';
     return `data:${mimeType};base64,${buffer.toString('base64')}`;
 }
@@ -37,8 +37,8 @@ If not food, Name: "unknown", nutrients: -1.`;
 
     const imageUrl = await imageToDataUrl(filePath);
 
-    const completion = await groq.chat.completions.create({
-        model: "openai/gpt-oss-20b", // Рабочая vision-модель
+    const completion = await openai.chat.completions.create({
+        model: "qwen/qwen2-vl-7b-instruct:free",
         messages: [
             { 
                 role: "user", 
@@ -49,7 +49,7 @@ If not food, Name: "unknown", nutrients: -1.`;
             }
         ],
         temperature: 0.1,
-        response_format: { type: "json_object" } // Гарантирует валидный JSON от Groq
+        response_format: { type: "json_object" }
     });
 
     return completion.choices[0]?.message?.content || '{"Name":"unknown","Calories":-1,"Fats":-1,"Carbs":-1,"Proteins":-1}';
@@ -60,25 +60,19 @@ export async function recognizeFood(req, res) {
         const form = new IncomingForm({
             uploadDir: join(__dirname, '../media'),
             keepExtensions: true,
-            maxFileSize: 10 * 1024 * 1024 // 10 MB
+            maxFileSize: 10 * 1024 * 1024
         });
 
         const [fields, files] = await form.parse(req);
-        
-        // Проверяем оба возможных имени поля для надежности
         const uploadedFile = files.file?.[0] || files.photo?.[0];
 
         if (!uploadedFile) {
             return res.status(400).json({ error: "Файл не найден в запросе" });
         }
 
-        // Получаем JSON-строку от AI
         const resultJsonString = await analyzeFoodImage(uploadedFile.filepath);
-
-        // Удаляем временный файл
         await unlink(uploadedFile.filepath).catch(err => console.error("Ошибка удаления файла:", err));
 
-        // Отправляем как есть (Content-Type уже будет application/json)
         res.setHeader('Content-Type', 'application/json');
         return res.send(resultJsonString);
 
