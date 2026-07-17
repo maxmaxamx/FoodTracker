@@ -36,7 +36,7 @@ async function analyzeFoodImage(filePath) {
     const imageUrl = await imageToDataUrl(filePath);
 
     const completion = await openai.chat.completions.create({
-        model: "nvidia/nemotron-nano-12b-2-vl",
+        model: "nvidia/nemotron-3-super-120b-a12b:free",
         messages: [
             { 
                 role: "user", 
