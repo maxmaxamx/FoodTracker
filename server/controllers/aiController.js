@@ -38,7 +38,7 @@ If not food, Name: "unknown", nutrients: -1.`;
     const imageUrl = await imageToDataUrl(filePath);
 
     const completion = await openai.chat.completions.create({
-        model: "qwen/qwen2-vl-7b-instruct:free",
+        model: "qwen/qwen3.7-plus",
         messages: [
             { 
                 role: "user", 
