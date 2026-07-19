@@ -31,12 +31,16 @@ async function imageToDataUrl(filePath) {
 }
 
 async function analyzeFoodImage(filePath) {
-    const prompt = `Analyze this food image carefully. Think step-by-step about the ingredients, portion size, and cooking method to estimate the nutritional value. Then, return ONLY a raw JSON object. No markdown, no explanations, no code blocks. Format: {"Name": "string in Russian", "Calories": number, "Fats": number, "Carbs": number, "Proteins": number}. If not food, return exactly: {"Name": "unknown", "Calories": -1, "Fats": -1, "Carbs": -1, "Proteins": -1}`;
+    // Добавили напоминание для модели придерживаться JSON структуры
+    const prompt = `Analyze this food image carefully. Think step-by-step about the ingredients, portion size, and cooking method to estimate the nutritional value. Then, return ONLY a raw JSON object. No markdown, no explanations, no code blocks. 
+    Format: {"Name": "string in Russian", "Calories": number, "Fats": number, "Carbs": number, "Proteins": number}. 
+    If not food, return exactly: {"Name": "unknown", "Calories": -1, "Fats": -1, "Carbs": -1, "Proteins": -1}`;
 
     const imageUrl = await imageToDataUrl(filePath);
 
     const completion = await openai.chat.completions.create({
-        model: "nvidia/nemotron-3-super-120b-a12b:free",
+        // Выбираем мультимодальную модель (например, актуальную Gemini Flash)
+        model: "google/gemini-2.5-flash", 
         messages: [
             { 
                 role: "user", 
@@ -46,7 +50,7 @@ async function analyzeFoodImage(filePath) {
                 ]
             }
         ],
-        reasoning: { enabled: true },
+        // response_format отлично работает с моделями Google/OpenAI в OpenRouter
         response_format: { type: "json_object" }
     });
 
@@ -58,6 +62,7 @@ async function analyzeFoodImage(filePath) {
 
     let content = response.content;
     
+    // Очистка от возможных markdown-оберток (хотя response_format их минимизирует)
     content = content.replace(/^```(?:json)?\s*|\s*```$/g, '').trim();
     
     const start = content.indexOf('{');
@@ -66,11 +71,11 @@ async function analyzeFoodImage(filePath) {
         content = content.substring(start, end + 1);
     }
 
+    // Валидируем, что это корректный JSON
     JSON.parse(content); 
     
     return content;
 }
-
 export async function recognizeFood(req, res) {
     try {
         const form = new IncomingForm({
