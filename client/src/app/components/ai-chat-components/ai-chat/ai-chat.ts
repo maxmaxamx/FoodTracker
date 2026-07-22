@@ -39,7 +39,7 @@ export class AiChat {
     return `${h}:${m}`;
   }
 
-  private _parseFoodData(data: string): FoodExample {
+  private _parseFoodData(data: any): FoodExample {
     const fallback: FoodExample = {
       Id: 0,
       Name: 'unknown',
@@ -51,7 +51,8 @@ export class AiChat {
     };
 
     try {
-      const parsed = JSON.parse(data);
+      // Если пришла строка — парсим, если уже объект — используем как есть
+      const parsed = typeof data === 'string' ? JSON.parse(data) : data;
       if (typeof parsed !== 'object' || parsed === null) return fallback;
 
       const hasValidFields =

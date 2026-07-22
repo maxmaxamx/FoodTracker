@@ -12,7 +12,7 @@ export class Artificial {
     const formData = new FormData();
     formData.append('photo', file, file.name);
 
-    return this.http.post<string>(`${this.api}/recognize`, formData)
+    return this.http.post(`${this.api}/recognize`, formData, { responseType: 'text' })
   }
   
 }
