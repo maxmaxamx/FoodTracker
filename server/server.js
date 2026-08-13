@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import smartRouter from "./routes/smartRouter.js";
 import sequelize, { pool } from "./database.js";
-import { sendEmail, sendMAIL } from './helpers/mailSETUP.js';
+import { sendEmail } from './helpers/mailSETUP.js';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import 'dotenv/config';

@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-dotenv.config({ path: resolve(__dirname, '../.env') });
+dotenv.config({ path: resolve(__dirname, '../../.env') });
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -28,8 +28,8 @@ export async function verifyEmailConnection() {
     }
 }
 
-export function sendEmail(to, subject, text) {
-    mailOptions = {
+export async function sendEmail(to, subject, text) {
+    const mailOptions = {
         from: process.env.GMAIL_USER,
         to,
         subject,
@@ -37,32 +37,11 @@ export function sendEmail(to, subject, text) {
     };
 
     try {
-        let mailInfo = ''; 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) return console.log(error);
-            console.log('Email sent: ' + info.response);
-            mailInfo = info;
-        });
-        console.log('✅ Письмо отправлено:', mailInfo.messageId);
-        return { success: true, messageId: mailInfo.messageId };
+        const info = await transporter.sendMail(mailOptions);
+        console.log('✅ Письмо отправлено:', info.messageId);
+        return { success: true, messageId: info.messageId };
     } catch (error) {
         console.error('❌ Ошибка отправки:', error.message);
         throw new Error(`Не удалось отправить письмо: ${error.message}`);
     }
-}
-
-let mailOptions = {
-    from: 'foodtracker932@gmail.com',
-    to: 'novitskiymaxim08@gmail.com',
-    subject: 'Тест OAuth2',
-    text: 'Это письмо отправлено через OAuth2!'
-};
-
-export function sendMAIL() {
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) return console.log(error);
-        console.log('Email sent: ' + info.response);
-
-        return info.response;
-    });
 }

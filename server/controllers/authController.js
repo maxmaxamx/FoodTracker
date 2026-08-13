@@ -81,7 +81,7 @@ export async function getCode(req, res) {
 
         req.session.verifCode = code;
 
-        sendEmail(req.session.email, "Подтверждение входа в аккаунт FoodTracker", code);
+        await sendEmail(req.session.email, "Подтверждение входа в аккаунт FoodTracker", code);
 
         return res.status(200).json({ message: 'correct' })
 
